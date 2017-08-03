@@ -1,28 +1,30 @@
 # phyngle
-PHYlogenies and co-expression networks for siNGLE cell data
+*PHY*logenies and clone-specific expression from si*NGLE*-cell RNA sequencing
 
 ## Table of contents
-- [Calling presence/absence of CNVs](#Calling_CNV)
+- [Identifying CNVs from scRNA-seq](#Calling_CNV)
 - [Phylogenetic tree contruction](#Constructing_Tree)
-- [Co-expression network generation](#CX_Net)
-- [Correlation of RNA-seq and exome-Seq](#Corr)
-- [False discovery rate estimation: 10x Cross validation](#10x)
+- [Intra-clone co-expression networks](#CX_Net)
+- [Assessing the correlation of CNV status with single-cell expression](#Corr)
+- [False discovery rate estimation: Cross validation](#10x)
 - [False discovery rate estimation: Empirical testing](#Empirical)
 
 
 ## <a id="Calling_CNV"></a> Calling presence/absence of CNVs
-Phyngle made CNV presence/absence calls for individual cells by comparing the distribution of expression from single-cell RNA-seq in tumor and normal-brain control. 
+Identifying large-scale CNVs in scRNA-seq. 
 
-### Requirement
+### Requirements
   * Linux/Unix environment (Python/Perl)
   * beanplot (R package)
   * samtools
   * bedtools  
+  * Two directories, the first containing the aligned scRNA-seq data to be classified by CNV status, and a second, containing aligned scRNA-seq data to be used as a control.
+  * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
 ### Config file
-Adjusting __Phyngle.cfg__ can change the belows.
+Adjust __Phyngle.cfg__ to customize the following:
   * Path to python/samtools/bedtools/Rscript
-  * The threshold of mapping-qualities/read-count for alignment files
+  * Thresholds for mapping-quality and read-count
   * FDR for CNV calling
 
 ### Running
