@@ -14,10 +14,10 @@
 Identifying large-scale CNVs in scRNA-seq. 
 
 ### Requirements
-  * Linux/Unix environment (Python/Perl)
-  * beanplot (R package)
-  * samtools
-  * bedtools  
+  * [Python](https://www.python.org) and [Perl](https://www.perl.org)
+  * [beanplot (R package)](https://www.jstatsoft.org/article/view/v028c01)
+  * [samtools](http://www.htslib.org)
+  * [bedtools](http://bedtools.readthedocs.io/en/latest)  
   * Two directories, the first containing the aligned scRNA-seq data to be classified by CNV status, and a second, containing aligned scRNA-seq data to be used as a control.
   * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
@@ -30,20 +30,19 @@ Adjust __Phyngle.cfg__ to customize the following:
 ### Running
 
   ```
-  cd ./Phyngle/
   bash run_Phyngle.sh [directory for tumor] [directory for normal] [.bed file for CNV segments] [base name]
   ```
-  * __[directory for tumor]__: path to directory which aligned bam files of __tumor__ single cells are in. GBM data in [here](https://www.ebi.ac.uk/ega/studies/EGAS00001002185) is used as examples in the journal.
+  * __[directory for tumor]__: path to directory containing aligned bam files to be tested. Example glioblastoma data, used in the manuscript, can be obtained [here](https://www.ebi.ac.uk/ega/studies/EGAS00001002185).
     
-  * __[directory for normal]__: path to directory which aligned bam files of __normal__ control single cells are in. Transcriptomes from normal brain from [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835) was used as an examples for the journal 
+  * __[directory for normal]__: path to directory containing aligned bam files to be used as a control. Example nonmalignant brain data, used in the manuscript, can be obtained [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835) was used as an examples for the journal 
    
-  * __[.bed file for CNV segments]__: tab-delimited bed file of CNV segments from exom sequencing.
+  * __[.bed file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
   
       ```
       [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
       ```
       
-      __Note: the 4th column of the file must have the exact same format with that of below.
+      __Note: the 4th column of the file must have the exact format shown here:
         __ (__Amp__:amplification, __Del__:deletion)
     * example (SF10281c.cnv.merged_gt1500000_20percent.bed)
   ```
@@ -54,11 +53,11 @@ Adjust __Phyngle.cfg__ to customize the following:
   
 
 ### Output
-The directory __output_[base name]__ would be generated and all the output files would be located in this directory.
-  1. __incidenceMatrix.csv__: the matrix of the presence/absence of the CNVs in individual single cells
+All output files will be located in the directory __output_[base name]__.
+  1. __incidenceMatrix.csv__: matrix of presence/absence for all CNVs, in individual cells
   2. __pdf__: 
     1. Read-count distribution in CNV segments. (violin plot)
-    2. Hierarchical clustering of the tumor single cells by the presence/absence of the CNVs.
+    2. Hierarchical clustering of the single cells by CNV status.
 
 ![violin](images/Phyngle_violin.jpg?raw=true "violin" )
 ![dendrogram](images/Phyngle_dendrogram.jpg?raw=true "dendrogram" )
