@@ -35,14 +35,13 @@ Adjust __Phyngle.cfg__ to customize the following:
     
   * __[directory for normal]__: path to directory containing aligned bam files to be used as a control. Example nonmalignant brain data, used in the manuscript, can be obtained [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835) was used as an examples for the journal 
    
-  * __[.bed file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
+  * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
   
       ```
       [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
       ```
       
-      Note: the 4th column of the file must have the exact format shown here:(__Amp__:amplification, __Del__:deletion)
-    * example (SF10281c.cnv.merged_gt1500000_20percent.bed)
+      Note: the 4th column of the file must have the exact format shown here:(__Amp__: amplification, __Del__: deletion)
   ```
   7   19533   157408385   7:19533:157408385:Amp
   9   19116859    32405639    9:19116859:32405639:Del
@@ -53,9 +52,8 @@ Adjust __Phyngle.cfg__ to customize the following:
 ### Output
 All output files will be located in the directory __output_[base name]__.
   1. __incidenceMatrix.csv__: matrix of presence/absence for all CNVs, in individual cells
-  2. __pdf__: 
-    1. Read-count distribution in CNV segments. (violin plot)
-    2. Hierarchical clustering of the single cells by CNV status.
+  2. Read-count distribution in CNV segments. (violin plot)
+  3. Hierarchical clustering of the single cells by CNV status.
 
 ![violin](images/Phyngle_violin.jpg?raw=true "violin" )
 ![dendrogram](images/Phyngle_dendrogram.jpg?raw=true "dendrogram" )
@@ -66,7 +64,7 @@ Phyngle can generate a phylogenetic tree from the CNV incidence matrix, using th
 
 ### Requirements
   * [Rscript](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rscript.html)
-  * [Rphylip](https://cran.r-project.org/web/packages/Rphylip/index.html) (R package)
+  * [Rphylip](https://cran.r-project.org/web/packages/Rphylip/index.html)
   * [Phylip](http://evolution.genetics.washington.edu/phylip.html) 
 
 ### Config file
