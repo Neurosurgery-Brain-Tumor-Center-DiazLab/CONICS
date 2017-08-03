@@ -135,7 +135,7 @@ Adjust __CorrelationNetwork.cfg__ to configure the following:
 ### Output
 All the output files will be located in __output__.
   1. __[correlstion_threshold]_[gene_name].txt__ : co-expression network
-  2. __[gene_name]_corMat.rd__: Rdata containing the adjusted correlation matrix
+  2. __[gene_name]corMat.rd__: Rdata containing the adjusted correlation matrix
   3. __topCorrelations.pdf__: bar graph of top correlations. 
   
 ![CXnet](images/PTEN_topCorr.jpg?raw=true "CXnet" )
