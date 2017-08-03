@@ -1,5 +1,5 @@
-# phyngle
-__*PHY*__logenies and clone-specific expression from si__*NGLE*__-cell RNA sequencing
+# __phyngle__
+*PHY*logenies and clone-specific expression from si*NGLE*-cell RNA sequencing
 
 ## Table of contents
 - [Identifying CNVs from scRNA-seq](#Calling_CNV)
