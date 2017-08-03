@@ -1,5 +1,5 @@
 # phyngle
-*PHY*logenies and clone-specific expression from si*NGLE*-cell RNA sequencing
+__*PHY*__logenies and clone-specific expression from si__*NGLE*__-cell RNA sequencing
 
 ## Table of contents
 - [Identifying CNVs from scRNA-seq](#Calling_CNV)
@@ -10,12 +10,11 @@
 - [False discovery rate estimation: Empirical testing](#Empirical)
 
 
-## <a id="Calling_CNV"></a> Calling presence/absence of CNVs
-Identifying large-scale CNVs in scRNA-seq. 
+## <a id="Calling_CNV"></a> Identifying CNVs from scRNA-seq 
 
 ### Requirements
   * [Python](https://www.python.org) and [Perl](https://www.perl.org)
-  * [beanplot (R package)](https://www.jstatsoft.org/article/view/v028c01)
+  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)(R package)
   * [samtools](http://www.htslib.org)
   * [bedtools](http://bedtools.readthedocs.io/en/latest)  
   * Two directories, the first containing the aligned scRNA-seq data to be classified by CNV status, and a second, containing aligned scRNA-seq data to be used as a control.
@@ -64,28 +63,30 @@ All output files will be located in the directory __output_[base name]__.
 
 
 ## <a id="Constructing_Tree"></a> Phylogenetic tree contruction
-Phyngle generates the phylogenetic tree from the presence/absence profiles of CNV and visualize it. First, Phyngle clusters cells for the user-defined numbers, and then generates phylogenetic tree. Each leaf correspond the different genotypes, CNV status. This requires additional R package (Rphylip) for execution.
+Phyngle can generate a phylogenetic tree from the CNV incidence matrix, using the Fitch-Margoliash algorithm. Other phylogenetic reconstruction algorithms can be applied, using the incidence matrix as a starting point.
 
-### Requirement
-  * Rphylip (R package) with Phylip 
+### Requirements
+  * [Rscript](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rscript.html)
+  * [Rphylip](https://cran.r-project.org/web/packages/Rphylip/index.html) (R package)
+  * [Phylip](http://evolution.genetics.washington.edu/phylip.html) 
 
 ### Config file
 
-Adjusting __Tree.cfg__ can change the belows.
+Adjust __Tree.cfg__ to change the following.
   * Path to Rscript
   * Path to Rphylip
   
 ### Running
-  * Before running, the path to phylip need to be added in __Tree.cfg__ file.
+  * Before running, set the path to Phylip in __Tree.cfg__ file.
 ```
 bash run_Tree.sh [CNV presence/absence matrix][number of genotypes] [base name for output file]
 ```
-  * __[CNV presence/absence matrix]__: .incidenceMatrix.csv files. Note that exclusion of non-malignent single cells from the matrix is recommended. 
-  * __[number of genotypes]__: the number of genotypes which are used for constructing trees by the aid of hierarchical clustering from the previous output files.
+  * __[CNV presence/absence matrix]__: .incidenceMatrix.csv files. 
+  * __[number of genotypes]__: the number of genotypes to model
   * __[base name]__ : base name for output directory
 
 ### Output
-__[base name]_cluster.pdf__ (phylogenetic trees) and __[base name]_cluster.txt__ would be generated in __output_[base name]__ directory. Each leaf correspond the clusters of cells which pertains different genotypes (different CNV status). Cells which belong to the different clusteres are in __[base name]_cluster.txt__ . 
+__[base name]_cluster.pdf__ (phylogenetic trees) and __[base name]_cluster.txt__ will be generated in the __output_[base name]__ directory. Each leaf corresponds to a clusters of cells with a common genotype. Cluster assignments for each cell will be in __[base name]_cluster.txt__ . 
 
 
 
@@ -100,22 +101,27 @@ cluster_5  C5
 cluster_6  F8,B1
 ```
 
-## <a id="CX_Net"></a> Generating co-expression network
-Co-expression network could be constructed by the correlations of expressions in single cells. First, Phygle calculate [SCDE](http://hms-dbmi.github.io/scde/) -adjusted expressional correlations between genes. Then, the network which is constituted of top-correlated genes with the user-supplied target genes will be constructed.  
+## <a id="CX_Net"></a> Intra-clone co-expression networks
+Phyngle can construct the local co-expression network of a given gene, based on correlations across single cells.  
   
 
-### Requirement
-  * scde, PCIT, boot, parallel, raster, flashClust (R package)
+### Requirements
+  * [scde](http://hms-dbmi.github.io/scde)
+  * [PCIT](https://cran.r-project.org/web/packages/PCIT/index.html)
+  * [boot](https://cran.r-project.org/web/packages/boot/)
+  * [parallel](https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf)
+  * [raster](https://cran.r-project.org/web/packages/raster/)
+  * [flashClust](https://cran.r-project.org/web/packages/flashClust/index.html)
   
 ### Config file
-Adjusting __CorrelationNetwork.cfg__ can change the belows.
+Adjust __CorrelationNetwork.cfg__ to configure the following:
   * Path to Rscript
-  * ncore: Number of cores for computation  (default: 12)
-  * cor_threshold: Starting threshold for neighbour correlationof gene of interest (is decreased until at least x neighbours are found)(default: 0.9)
-  * min_neighbours: How many direct neighbours of gene of interest should be searched for (default: 20)
-  * minRawReads: How many raw reads should at least map to a gene to consider the gene (default: 100)
-  * percentCellsExpressing: Percentage (0.15 =15%) of cells expressing a gene to consider the gene (default: 0.15)
-  * minGenesExpr: How many genes should be expressed at least in a cell to consider the cell (default: 800)
+  * ncore: Number of cores (default: 12)
+  * cor_threshold: Starting threshold to construct the co-expression network (default: 0.9)
+  * min_neighbours: How many direct neighbours of gene of interest should be analyzed (default: 20)
+  * minRawReads: How many raw reads should map to a gene for it to be included (default: 100)
+  * percentCellsExpressing: Percentage (0.15 =15%) of cells expressing a gene for it to be included (default: 0.15)
+  * minGenesExpr: How many genes should be expressed in a cell for it to be included (default: 800)
   * depth: How deep should the gene analysis search. (2=only direct neighbor genes would be considered) (default: 2)
 
 
@@ -125,40 +131,39 @@ Adjusting __CorrelationNetwork.cfg__ can change the belows.
   bash run_CorrelationNetwork.sh [input matrix] [centered gene] [base name]
   ```
   
-  * __[input matrix]__: tab-delimited file of the number of mapped reads to each gene in single cells. 
+  * __[input matrix]__: tab-delimited file of read counts for each gene (rows), for each cell (columns). 
   * __[centered gene]__: a target gene of which neighbor genes are analyzed.  
   * __[base name]__ : base name for output directory
 
 ### Output
-The directory __output_[base name]__ would be generated and all the output files would be located in this directory.
+All the output files will be located in __output_[base name]__.
   1. __[base name]_[correlstion_threshold]_[gene_name].txt__ : co-expression network
-  2. __[base name]_[gene_name]_corMat.rd__: Rdata of entire correlation
+  2. __[base name]_[gene_name]_corMat.rd__: Rdata containing the adjusted correlation matrix
   3. __[base name]_topCorrelations.pdf__: bar graph of top correlations. 
   
 ![CXnet](images/PTEN_topCorr.jpg?raw=true "CXnet" )
 
 
 
-## <a id="Corr"></a> Correlation of scRNA-seq and exome-Seq
-The correlation between Exome-seq and single-cell RNA-seq could be assessed. Briefly, the read counts resulting from the single-cell sequencing are compared to those from the exome-seq from the same patients.  
+## <a id="Corr"></a> Assessing the correlation of CNV status with single-cell expressionq 
 
-### Requirement
-  * zoo (R package)
+### Requirements
+  * [zoo](https://cran.r-project.org/web/packages/zoo/index.html)
   
 ### Config file
-Adjusting __CompareExomeSeq_vs_ScRNAseq.cfg__ can change the belows.
+Adjust __CompareExomeSeq_vs_ScRNAseq.cfg__ to set the following:
   * Path to Rscript
-  * window size
+  * window size for assessing CNV status
   
 ### Running
 
   ```
   bash run_compareExomeSeq_vs_ScRNAseq.sh [matrix for read counts] [base name for output file]
   ```
-  * __[matrix for read counts]__: tab-delimited file of the number of mapped reads to each gene in Exome-seq and single-cell RNA-seq
+  * __[matrix for read counts]__: tab-delimited file of the number of mapped reads to each gene in the DNA sequencing and in scRNA-seq
   
       ```
-      [gene] [chromosome] [start] [#read in Exome-seq(normal)] [#read in Exome-seq(tumor)] [#read in scRNA-seq(normal)] [#read in scRNA-seq(tumor)]
+      [gene] [chromosome] [start] [#read in DNA-seq(normal)] [#read in DNA-seq(tumor)] [#read in scRNA-seq(normal)] [#read in scRNA-seq(tumor)]
       ```
     * example
   ```
@@ -171,33 +176,33 @@ WASH7P    1   14362   4263   6541   223   45
 
 
 ### Output
-__Compare_[window_size].pdf__ (Box plot) would be generated in __output_[base name]__ directory. 
+__Compare_[window_size].pdf__ (Box plot) will be generated in the directory __output_[base name]__. 
 ![compare](images/Compare_200.jpg?raw=true "compare" )
 
 
-## <a id="10x"></a> False discovery rate estimation: 10x Cross validation
-Phyngle could estimate false discovery rate (FDR) by 10x cross validation. In cross validation, false positive CNV calls are derived from the [normal brain controls](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835) which randomly selected 10% were used as the test sets and the remaining 90% were used for training.
+## <a id="10x"></a> False discovery rate estimation: Cross validation
+Phyngle can estimate false discovery rate via 10-fold cross-validation, using the user-supplied control scRNA-seq dataset. For example, in the manuscript cross validation was performed using [normal brain controls](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835).
 
-### Requirement
-  * beanplot (R package)
-  * samtools
-  * bedtools  
+### Requirements
+  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)(R package)
+  * [samtools](http://www.htslib.org)
+  * [bedtools](http://bedtools.readthedocs.io/en/latest)  
 
 
 ### Config file
-Adjusting __10X_cross_validation.cfg__ can change the belows.
-  * Path to python/samtools/bedtools/Rscript
-  * The threshold of mapping-qualities/read-count for alignment files
+Adjust __10X_cross_validation.cfg__ to set the following:
+  * Paths to python/samtools/bedtools/Rscript
+  * Thresholds for mapping-quality and read-count.
   * FDR for CNV calling
 
 ### Running
 
   ```
-  bash run_10X_cross_validation.sh [directory for test] [.bed files for CNV segments] [base name]
+  bash run_10X_cross_validation.sh [directory for control scRNA-seq] [.bed file containing CNV segments] [base name]
   ```
-  * __[directory for test]__: path to directory which aligned bam files of __testing__ for FDR estimation
+  * __[directory for test]__: path to directory containing the aligned BAM files of the scRNA-seq control data.
    
-  * __[.bed file for CNV segments], [base name]__ : same as above.
+  * __[.bed file for CNV segments], [base name]__ : same as described in run_Phyngle.sh
 ;
 ### Output
 Box plot of 10 FDRs resulting from each pooled sample would be generated (__[base name]_boxplot.pdf__) in  __output_[base name]__ directories.
@@ -206,15 +211,15 @@ Box plot of 10 FDRs resulting from each pooled sample would be generated (__[bas
 ## <a id="Empirical"></a> False discovery rate estimation: Empirical testing
 The FDR could be estimated by empirical testing. The number of false positive CNV calls was calculated from non-malignant [fetal brain dataset](http://dx.doi.org/10.1016/j.cell.2015.09.004) which are independent on the [training set](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835)
 
-### Requirement
-  * beanplot (R package)
-  * samtools
-  * bedtools  
+### Requirements
+  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)(R package)
+  * [samtools](http://www.htslib.org)
+  * [bedtools](http://bedtools.readthedocs.io/en/latest)
   
 ### Config file
-Adjusting __Empirical_validation.cfg__ can change the belows.
-  * Path to python/samtools/bedtools/Rscript
-  * The threshold of mapping-qualities/read-count for alignment files
+Adjust __Empirical_validation.cfg__ to change the following:
+  * Paths to python/samtools/bedtools/Rscript
+  * Thresholds for mapping-quality and read count
   * FDR for CNV calling
 
 ### Running
@@ -223,12 +228,12 @@ Adjusting __Empirical_validation.cfg__ can change the belows.
   bash run_empirical_validation.sh [directory for train] [directory for test] [.bed files for CNV segments] [base name]
   ```
 
-  * __[directory for train]__: path to directory which aligned bam files for __training__ for FDR estimation
+  * __[directory for train]__: path to directory containing aligned bam files of scRNA-seq data used as a control to call CNVs
     
-  * __[directory for test]__: path to directory which aligned bam files of __testing__ for FDR estimation
+  * __[directory for test]__: path to directory containing aligned bam files of scRNA-seq data known not to have CNVs, used as a gold standard.
    
-  * __[.bed file for CNV segments], [base name]__ : same as above.
+  * __[.bed file for CNV segments], [base name]__ : same as described in run_Phyngle.sh
 
 ### Output
-Box plot of FDRs would be generated (__[base name]_boxplot.pdf__) in  __output_[base name]__ directories.
+Box plot of FDRs will be generated (__[base name]_boxplot.pdf__) in the  __output_[base name]__ directory.
 ![empirical](images/Empirical_boxplot.jpg?raw=true "empirical_Test" )
