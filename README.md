@@ -83,7 +83,7 @@ bash run_Tree.sh [CNV presence/absence matrix][number of genotypes] [base name f
   * __[base name]__ : base name for output directory
 
 ### Output
-__[base name]_cluster.pdf__ (phylogenetic trees) and __[base name]_cluster.txt__ will be generated in the __output_[base name]__ directory. Each leaf corresponds to a clusters of cells with a common genotype. Cluster assignments for each cell will be in __[base name]_cluster.txt__ . 
+__cluster.pdf__ (phylogenetic trees) and __cluster.txt__ will be generated in the output directory. Each leaf corresponds to a clusters of cells with a common genotype. Cluster assignments for each cell will be in __cluster.txt__. 
 
 
 
@@ -133,10 +133,10 @@ Adjust __CorrelationNetwork.cfg__ to configure the following:
   * __[base name]__ : base name for output directory
 
 ### Output
-All the output files will be located in __output_[base name]__.
-  1. __[base name]_[correlstion_threshold]_[gene_name].txt__ : co-expression network
-  2. __[base name]_[gene_name]_corMat.rd__: Rdata containing the adjusted correlation matrix
-  3. __[base name]_topCorrelations.pdf__: bar graph of top correlations. 
+All the output files will be located in __output__.
+  1. __[correlstion_threshold]_[gene_name].txt__ : co-expression network
+  2. __[gene_name]_corMat.rd__: Rdata containing the adjusted correlation matrix
+  3. __topCorrelations.pdf__: bar graph of top correlations. 
   
 ![CXnet](images/PTEN_topCorr.jpg?raw=true "CXnet" )
 
@@ -173,7 +173,7 @@ WASH7P    1   14362   4263   6541   223   45
 
 
 ### Output
-__Compare_[window_size].pdf__ (Box plot) will be generated in the directory __output_[base name]__. 
+__Compare_[window_size].pdf__ (Box plot) will be generated in the output directory. 
 ![compare](images/Compare_200.jpg?raw=true "compare" )
 
 
@@ -202,14 +202,14 @@ Adjust __10X_cross_validation.cfg__ to set the following:
   * __[.bed file for CNV segments], [base name]__ : same as described in run_Phyngle.sh
 ;
 ### Output
-Box plot of 10 FDRs resulting from each pooled sample would be generated (__[base name]_boxplot.pdf__) in  __output_[base name]__ directories.
+Box plot of 10 FDRs resulting from each pooled sample would be generated (__boxplot.pdf__) in the output directory.
 ![10X](images/10X_boxplot.jpg?raw=true "10Xval_Test" )
 
 ## <a id="Empirical"></a> False discovery rate estimation: Empirical testing
 The FDR could be estimated by empirical testing. The number of false positive CNV calls was calculated from non-malignant [fetal brain dataset](http://dx.doi.org/10.1016/j.cell.2015.09.004) which are independent on the [training set](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835)
 
 ### Requirements
-  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)(R package)
+  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)
   * [samtools](http://www.htslib.org)
   * [bedtools](http://bedtools.readthedocs.io/en/latest)
   
@@ -229,8 +229,8 @@ Adjust __Empirical_validation.cfg__ to change the following:
     
   * __[directory for test]__: path to directory containing aligned bam files of scRNA-seq data known not to have CNVs, used as a gold standard.
    
-  * __[.bed file for CNV segments], [base name]__ : same as described in run_Phyngle.sh
+  * __[BED file for CNV segments]__ : same as described in run_Phyngle.sh
 
 ### Output
-Box plot of FDRs will be generated (__[base name]_boxplot.pdf__) in the  __output_[base name]__ directory.
+Box plot of FDRs will be generated (__boxplot.pdf__) in the output directory.
 ![empirical](images/Empirical_boxplot.jpg?raw=true "empirical_Test" )
