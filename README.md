@@ -14,7 +14,7 @@
 
 ### Requirements
   * [Python](https://www.python.org) and [Perl](https://www.perl.org)
-  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)(R package)
+  * [beanplot](https://www.jstatsoft.org/article/view/v028c01)
   * [samtools](http://www.htslib.org)
   * [bedtools](http://bedtools.readthedocs.io/en/latest)  
   * Two directories, the first containing the aligned scRNA-seq data to be classified by CNV status, and a second, containing aligned scRNA-seq data to be used as a control.
@@ -41,8 +41,7 @@ Adjust __Phyngle.cfg__ to customize the following:
       [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
       ```
       
-      __Note: the 4th column of the file must have the exact format shown here:
-        __ (__Amp__:amplification, __Del__:deletion)
+      Note: the 4th column of the file must have the exact format shown here:(__Amp__:amplification, __Del__:deletion)
     * example (SF10281c.cnv.merged_gt1500000_20percent.bed)
   ```
   7   19533   157408385   7:19533:157408385:Amp
