@@ -1,5 +1,7 @@
 import sys
 
+#This script takes 2 VCF files, eg generated with GATK, containing all SNVs detected in exome-seq of a tumor and a control sample. Additionally, it takes a BED file which contains regions with somatic CNVs as an input. 
+
 normalVcf=open(sys.argv[1],"r")
 tumorVcf=open(sys.argv[2],"r")
 region_bed=open(sys.argv[3],"r")
