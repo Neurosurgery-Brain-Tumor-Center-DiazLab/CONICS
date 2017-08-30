@@ -2,12 +2,13 @@ import sys
 from subprocess import Popen,PIPE
 import os
 
-#With a Folder containing al BED files, a file name for the result, a metadata table and a BED file with genomic coordinates of SNVs this script calculates the BAF in every cell for each locus. 
+#With a Folder containing al BED files, a file name for the result, a metadata table and a BED file with genomic coordinates of SNVs, and the genome reads were mapped to in FASTA format this script calculates the BAF in every cell for each locus. 
 
 parentFolder=sys.argv[1]
 res_name=sys.argv[2]
 metadata=sys.argv[3]
 bedFile=sys.argv[4]
+genome=sys.argv[5]
 
 outf=open(res_name+"_baf.txt","w")
 outf1=open(res_name+"_af.txt","w")
@@ -41,7 +42,7 @@ for folder in dirs:
 		molemonkey2={}
 		if os.path.exists(bamPath): 
 			#if cellName in valid_cells:
-			p1=Popen(["bam-readcount","-q","20","-b","20","-w","0","-l",bedFile,"-f","/mnt/c/Users/soere/Documents/UCSF/SNP/vcfs/genome.fa",bamPath],stdout=PIPE)
+			p1=Popen(["bam-readcount","-q","20","-b","20","-w","0","-l",bedFile,"-f",genome,bamPath],stdout=PIPE)
 			res=p1.communicate()[0]
 			for line in res.split("\n")[:-1]:
 				line=line.split("\t")
