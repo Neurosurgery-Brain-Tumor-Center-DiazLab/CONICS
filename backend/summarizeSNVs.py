@@ -2,6 +2,8 @@ import sys
 from subprocess import Popen,PIPE
 import os
 
+#With a Folder containing al BED files, a file name for the result, a metadata table and a BED file with genomic coordinates of SNVs this script calculates the BAF in every cell for each locus. 
+
 parentFolder=sys.argv[1]
 res_name=sys.argv[2]
 metadata=sys.argv[3]
