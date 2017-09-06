@@ -79,7 +79,7 @@ All output files will be located in the directory ....
 
 
 ## <a id="Constructing_Tree"></a> Phylogenetic tree contruction
-Phyngle can generate a phylogenetic tree from the CNV incidence matrix, using the Fitch-Margoliash algorithm. Other phylogenetic reconstruction algorithms can be applied, using the incidence matrix as a starting point.
+CONICS can generate a phylogenetic tree from the CNV incidence matrix, using the Fitch-Margoliash algorithm. Other phylogenetic reconstruction algorithms can be applied, using the incidence matrix as a starting point.
 
 ### Requirements
   * [Rscript](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rscript.html)
@@ -218,7 +218,7 @@ Adjust __10X_cross_validation.cfg__ to set the following:
   ```
   * __[directory for test]__: path to directory containing the aligned BAM files of the scRNA-seq control data.
    
-  * __[.bed file for CNV segments], [base name]__ : same as described in run_Phyngle.sh
+  * __[.bed file for CNV segments], [base name]__ : same as described in run_CONICS.sh
 ;
 ### Output
 Box plot of 10 FDRs resulting from each pooled sample would be generated (__boxplot.pdf__) in the output directory.
@@ -248,7 +248,7 @@ Adjust __Empirical_validation.cfg__ to change the following:
     
   * __[directory for test]__: path to directory containing aligned bam files of scRNA-seq data known not to have CNVs, used as a gold standard.
    
-  * __[BED file for CNV segments]__ : same as described in run_Phyngle.sh
+  * __[BED file for CNV segments]__ : same as described in run_CONICS.sh
 
 ### Output
 Box plot of FDRs will be generated (__boxplot.pdf__) in the output directory.
