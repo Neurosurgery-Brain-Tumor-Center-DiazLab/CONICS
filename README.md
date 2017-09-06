@@ -1,8 +1,9 @@
-# __phyngle__
-*PHY*logenies and clone-specific expression from si*NGLE*-cell RNA sequencing
+# __CONICS__
+*CONICS*: *CO*py-*N*umber analysis *I*n single-*C*ell RNA-*S*equencing
 
 ## Table of contents
 - [Identifying CNVs from scRNA-seq](#Calling_CNV)
+- [Integrating the minor-allele frequencies of point mutations](#B_allele_freqs)
 - [Phylogenetic tree contruction](#Constructing_Tree)
 - [Intra-clone co-expression networks](#CX_Net)
 - [Assessing the correlation of CNV status with single-cell expression](#Corr)
@@ -22,7 +23,7 @@
   * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
 ### Config file
-Adjust __Phyngle.cfg__ to customize the following:
+Adjust __CONICS.cfg__ to customize the following:
   * Path to python/samtools/bedtools/Rscript
   * Thresholds for mapping-quality and read-count
   * FDR for CNV calling
@@ -30,7 +31,7 @@ Adjust __Phyngle.cfg__ to customize the following:
 ### Running
 
   ```
-  bash run_Phyngle.sh [directory for tumor] [directory for normal] [.bed file for CNV segments] [base name]
+  bash run_CONICS.sh [directory for tumor] [directory for normal] [.bed file for CNV segments] [base name]
   ```
   * __[directory for tumor]__: path to directory containing aligned bam files to be tested. Example glioblastoma data, used in the manuscript, can be obtained [here](https://www.ebi.ac.uk/ega/studies/EGAS00001002185).
     
@@ -58,6 +59,23 @@ All output files will be located in the directory __output_[base name]__.
 
 ![violin](images/Phyngle_violin.jpg?raw=true "violin" )
 ![dendrogram](images/Phyngle_dendrogram.jpg?raw=true "dendrogram" )
+
+## <a id="B_allele_freqs"></a> Integrating estimates of point-mutation minor-allele frequencies
+Regions of copy-number alteration will show a drop in the frequency of reads quantifying the minor allele. Averaged over large regions of copy-number alteration, this provides an additional metric to increase confidence in single-cell CNV-calls.
+
+### Requirements
+  * [Python](https://www.python.org) and [Perl](https://www.perl.org)
+  ....
+
+### Config file
+....
+
+### Running
+....
+
+
+### Output
+All output files will be located in the directory ....
 
 
 ## <a id="Constructing_Tree"></a> Phylogenetic tree contruction
@@ -100,7 +118,7 @@ cluster_6  F8,B1
 ```
 
 ## <a id="CX_Net"></a> Intra-clone co-expression networks
-Phyngle can construct the local co-expression network of a given gene, based on correlations across single cells.  
+CONICS can construct the local co-expression network of a given gene, based on correlations across single cells.  
   
 
 ### Requirements
@@ -143,7 +161,7 @@ All the output files will be located in __output__.
 
 
 
-## <a id="Corr"></a> Assessing the correlation of CNV status with single-cell expressionq 
+## <a id="Corr"></a> Assessing the correlation of CNV status with single-cell gene-expression 
 
 ### Requirements
   * [zoo](https://cran.r-project.org/web/packages/zoo/index.html)
@@ -179,7 +197,7 @@ __Compare_[window_size].pdf__ (Box plot) will be generated in the output directo
 
 
 ## <a id="10x"></a> False discovery rate estimation: Cross validation
-Phyngle can estimate false discovery rate via 10-fold cross-validation, using the user-supplied control scRNA-seq dataset. For example, in the manuscript cross validation was performed using [normal brain controls](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835).
+CONICS can estimate false discovery rate via 10-fold cross-validation, using the user-supplied control scRNA-seq dataset. For example, in the manuscript cross validation was performed using [normal brain controls](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835).
 
 ### Requirements
   * [beanplot](https://www.jstatsoft.org/article/view/v028c01)(R package)
@@ -207,7 +225,7 @@ Box plot of 10 FDRs resulting from each pooled sample would be generated (__boxp
 ![10X](images/10X_boxplot.jpg?raw=true "10Xval_Test" )
 
 ## <a id="Empirical"></a> False discovery rate estimation: Empirical testing
-The FDR could be estimated by empirical testing. The number of false positive CNV calls was calculated from non-malignant [fetal brain dataset](http://dx.doi.org/10.1016/j.cell.2015.09.004) which are independent on the [training set](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835)
+FDRs can also be estimated by empirical testing. In the manuscript, the number of false positive CNV calls was calculated using a non-malignant [fetal brain dataset](http://dx.doi.org/10.1016/j.cell.2015.09.004). These data are independent from the [training set](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835)
 
 ### Requirements
   * [beanplot](https://www.jstatsoft.org/article/view/v028c01)
