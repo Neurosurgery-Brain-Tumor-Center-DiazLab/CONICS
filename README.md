@@ -65,50 +65,30 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
 ### Requirements
   * [Python](https://www.python.org) and [R](https://cran.r-project.org/mirrors.html)
   * [bam-readcount](https://github.com/genome/bam-readcount) 
-  * [gplots](https://cran.r-project.org/web/packages/gplots/index.html)
+  * [gplots](https://cran.r-project.org/web/packages/gplots/index.html) and [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)
   * One directory containing the aligned tumor scRNA-seq data to be classified
   * Two variant [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files from exome-seq of (blood) control and tumor tissue, eg generated with the [GATK](https://software.broadinstitute.org/gatk/) toolkit.
   * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
+  
+### Config file
+Adjust __CONICS.cfg__ to customize the following:
+  * Path to python/bam-readcount/Rscript
+  * Path to genome which reads were mapped to
 
 ### Running
 
-1st step
-
  ```
-  python FilterSNVsFromVCF.py [.vcf of normal exome-seq] [.vcf of tumor exome-seq] [.bed file for CNV segments] [base name]  
-  
-  ```
-  * __[.vcf of normal exome-seq]__: Vcf file containing mutations for a control exome-seq, e.g. from blood of the patient. This file can be generated with tools like GATK toolkit.
-  
- * __[.vcf of tumor exome-seq]__: Vcf file containing mutations detected in exome-seq of the tumor. This file can be generated with tools like GATK toolkit.
-   
- * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
-  
-* __[base name]__ : base name for output directory
-
-2nd step
-
- ```
-  python summarizeSNVs.py [directory for tumor] [base name] [.bed file for CNV segments] [.FASTA of genome] 
-  
+  bash run_BAf_analysis.sh [directory for tumor] [VCF file for normal exome-seq] [VCF file for tumor exome-seq] [BED file for CNV segments] [base name]
   ```
   * __[directory for tumor]__: path to directory containing aligned bam files to be tested. Example glioblastoma data, used in the manuscript, can be obtained [here](https://www.ebi.ac.uk/ega/studies/EGAS00001002185).
-  
- * __[base name]__ : base name for output directory
+    
+  * __[VCF file for normal exome-seq]__: Vcf file containing mutations for a control exome-seq, e.g. from blood of the patient. This file can be generated with tools like GATK toolkit.
    
+  * __[VCF file for tumor exome-seq]__: Vcf file containing mutations detected in exome-seq of the tumor. This file can be generated with tools like GATK toolkit.
+  
  * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
   
-* __[.FASTA of genome]__: Genome the single cell RNA-seq reads were mapped to in FASTA format
-
-3rd step
-
- ```
-  Rscript plotVAFs.R [af.txt] [bf.txt]
-  
-  ```
-  * __[af.txt]__: The file containing A allel frequencies for each SNV in each cell generated in step 2.
-  
- * __[bf.txt]__ : The file containing B allel frequencies for each SNV in each cell generated in step 2.
+  * __[base name]__ : base name for output directory
   
 
 ### Output
