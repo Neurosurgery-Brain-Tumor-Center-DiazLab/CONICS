@@ -67,6 +67,9 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
   * [Python](https://www.python.org) and [R](https://cran.r-project.org/mirrors.html)
   * [bam-readcount](https://github.com/genome/bam-readcount) 
   * [gplots](https://cran.r-project.org/web/packages/gplots/index.html)
+  * One directory containing the aligned tumor scRNA-seq data to be classified
+  * Two variant [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files from exome-seq of (blood) control and tumor tissue, eg generated with the [GATK](https://software.broadinstitute.org/gatk/) toolkit.
+  * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
 ### Config file
 ....
