@@ -57,7 +57,7 @@ av_mat=av_mat[,colSums(is.na(av_mat))<nrow(av_mat)]
 
 #Plot BAF per region
 pdf(paste(ofi,"BAF_Tumor.pdf",sep=""))
-sel=!is.na(match(regions,regions_idf[c(1,3,4,5)]))
+sel=!is.na(match(regions,regions_idf))
 e=as.data.frame(tumor_baf[sel])
 e$expr=tumor_baf[sel]
 e$st=regions[sel]
@@ -68,6 +68,6 @@ dev.off()
 #Plot heatmap of z-scores
 pdf(paste(ofi,"Heatmap_BAF.pdf",sep=""))
 par(mar=c(10,5,5,5))
-heatmap.2(av_mat[which(rowSums(av_mat[,])>0),],na.color="blue",margins=c(13,8),srtCol=45)
+heatmap.2(av_mat[which(rowSums(av_mat)>0),],na.color="blue",margins=c(13,8),srtCol=45)
 dev.off()
 
