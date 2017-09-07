@@ -18,7 +18,6 @@
   * [beanplot](https://www.jstatsoft.org/article/view/v028c01)
   * [samtools](http://www.htslib.org)
   * [bedtools](http://bedtools.readthedocs.io/en/latest)  
-  * [bam-readcount](https://github.com/genome/bam-readcount) 
   * Two directories, the first containing the aligned scRNA-seq data to be classified by CNV status, and a second, containing aligned scRNA-seq data to be used as a control.
   * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
