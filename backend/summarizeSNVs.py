@@ -1,6 +1,7 @@
 import sys 
 from subprocess import Popen,PIPE
 import os
+import re
 
 #With a Folder containing a BAM files, a file name for the result and a BED file with genomic coordinates of SNVs, and the genome reads were mapped to in FASTA format this script calculates the BAF in every cell for each locus. 
 
@@ -24,10 +25,13 @@ for line in open(bedFile,"r"):
 	nucs[id]=[ref,alt,line[3]]
 
 i=0
+molemonkey={}
+molemonkey1={}
+molemonkey2={}
 files_all = [d for d in os.listdir(parentFolder) if os.path.isfile(os.path.join(parentFolder, d))]
 files = [d for d in files_all if bool(re.search('bam$', d))]
 for file in files:  
-	bamPath=os.join(parentFolder,file)
+	bamPath=os.path.join(parentFolder,file)
 	cellName=file.replace(".bam", "")
 	p1=Popen(["bam-readcount","-q","20","-b","20","-w","0","-l",bedFile,"-f",genome,bamPath],stdout=PIPE)
 	res=p1.communicate()[0]
