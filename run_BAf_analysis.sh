@@ -18,19 +18,19 @@ out_dir="output_"${output_base}
 if [ -d ${out_dir} ]
 then
 	echo "[error] output directory \"${out_dir}\" already exists"
-	#exit 1
+	exit 1
 fi
 
 mkdir ${out_dir}
 
 echo "========= <generating BED file of heterozygous germline SNVs> ================="
-#${path_to_python} ./backend/FilterSNVsFromVCF.py ${snvs_normal} ${snvs_tumor} ${cnv_bed} ./${out_dir}/${output_base}
+${path_to_python} ./backend/FilterSNVsFromVCF.py ${snvs_normal} ${snvs_tumor} ${cnv_bed} ./${out_dir}/${output_base}
 echo "   =============================="
 echo "   BED file generated"
 echo "   =============================="
 echo "========= <Summarizing all SNVs in each cell> ================="
 
-#${path_to_python} ./backend/summarizeSNVs.py ${tumor_bam} ./${out_dir}/${output_base} ./${out_dir}/${output_base}_germline_snvs.bed ${genome}
+${path_to_python} ./backend/summarizeSNVs.py ${tumor_bam} ./${out_dir}/${output_base} ./${out_dir}/${output_base}_germline_snvs.bed ${genome} ${path_to_bamreadcount}
 
 echo "========= <Summary done> ================="
 
