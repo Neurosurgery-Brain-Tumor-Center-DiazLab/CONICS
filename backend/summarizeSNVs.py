@@ -9,6 +9,7 @@ parentFolder=sys.argv[1]
 res_name=sys.argv[2]
 bedFile=sys.argv[3]
 genome=sys.argv[4]
+path_to_bamreadcount=sys.argv[5]
 
 outf=open(res_name+"_baf.txt","w")
 outf1=open(res_name+"_af.txt","w")
@@ -33,7 +34,7 @@ files = [d for d in files_all if bool(re.search('bam$', d))]
 for file in files:  
 	bamPath=os.path.join(parentFolder,file)
 	cellName=file.replace(".bam", "")
-	p1=Popen(["bam-readcount","-q","20","-b","20","-w","0","-l",bedFile,"-f",genome,bamPath],stdout=PIPE)
+	p1=Popen([path_to_bamreadcount,"-q","20","-b","20","-w","0","-l",bedFile,"-f",genome,bamPath],stdout=PIPE)
 	res=p1.communicate()[0]
 	for line in res.split("\n")[:-1]:
 		line=line.split("\t")
