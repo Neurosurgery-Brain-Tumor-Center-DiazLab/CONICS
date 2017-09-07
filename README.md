@@ -85,15 +85,6 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
    
  * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
   
-      ```
-      [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
-      ```
-      
-      Note: the 4th column of the file must have the exact format shown here:(__Amp__: amplification, __Del__: deletion)
-  ```
-  7   19533   157408385   7:19533:157408385:Amp
-  9   19116859    32405639    9:19116859:32405639:Del
-  ```
 * __[base name]__ : base name for output directory
 
 2nd step
@@ -108,15 +99,6 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
    
  * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
   
-      ```
-      [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
-      ```
-      
-      Note: the 4th column of the file must have the exact format shown here:(__Amp__: amplification, __Del__: deletion)
-  ```
-  7   19533   157408385   7:19533:157408385:Amp
-  9   19116859    32405639    9:19116859:32405639:Del
-  ```
 * __[.FASTA of genome]__: Genome the single cell RNA-seq reads were mapped to in FASTA format
 
 
