@@ -5,6 +5,8 @@ import sys
 normalVcf=open(sys.argv[1],"r")
 tumorVcf=open(sys.argv[2],"r")
 region_bed=open(sys.argv[3],"r")
+base=sys.argv[4]
+res_file=open(base+"_germline_snvs.bed","w")
 
 regions={}
 for line in region_bed:
@@ -65,5 +67,5 @@ for line in tumorVcf:
 							b=f[3]
 							vaf=1-vaf
 							cands[f[0]+"\t"+f[1]][0]=1-cands[f[0]+"\t"+f[1]][0]
-						print(f[0]+"\t"+f[1]+"\t"+f[1]+"\t"+cands[f[0]+"\t"+f[1]][1]+"_"+a+"_"+b+"_"+str(cands[f[0]+"\t"+f[1]][0])+"_"+str(vaf)+"\t"+str(int(ref+alt))+"\t+")
+						res_file.write(f[0]+"\t"+f[1]+"\t"+f[1]+"\t"+cands[f[0]+"\t"+f[1]][1]+"_"+a+"_"+b+"_"+str(cands[f[0]+"\t"+f[1]][0])+"_"+str(vaf)+"\t"+str(int(ref+alt))+"\t+\n")
 
