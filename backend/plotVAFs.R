@@ -1,11 +1,6 @@
 library(gplots)
 library(ggplot2)
 
-#setwd("/Users/soere/Documents/UCSF/Analysis/Phyngle/SF10281/")
-
-#a=read.table("sf10281baf_af.txt",header=T,row.names=1,sep="\t",check.names=F)
-#b=read.table("sf10281baf_bf.txt",header=T,row.names=1,sep="\t",check.names=F)
-
 #Reads file with A allele frequency anf file with B allele frequency for every SNV in every region
 args=commandArgs(TRUE)
 a=read.table(args[1],header=T,row.names=1,sep="\t",check.names=F)
