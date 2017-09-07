@@ -71,11 +71,53 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
   * Two variant [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files from exome-seq of (blood) control and tumor tissue, eg generated with the [GATK](https://software.broadinstitute.org/gatk/) toolkit.
   * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
-### Config file
-....
-
 ### Running
-....
+
+1st step
+
+ ```
+  python FilterSNVsFromVCF.py [.vcf of normal exome-seq] [.vcf of tumor exome-seq] [.bed file for CNV segments] [base name]  
+  
+  ```
+  * __[.vcf of normal exome-seq]__: Vcf file containing mutations for a control exome-seq, e.g. from blood of the patient. This file can be generated with tools like GATK toolkit.
+  
+ * __[.vcf of tumor exome-seq]__: Vcf file containing mutations detected in exome-seq of the tumor. This file can be generated with tools like GATK toolkit.
+   
+ * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
+  
+      ```
+      [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
+      ```
+      
+      Note: the 4th column of the file must have the exact format shown here:(__Amp__: amplification, __Del__: deletion)
+  ```
+  7   19533   157408385   7:19533:157408385:Amp
+  9   19116859    32405639    9:19116859:32405639:Del
+  ```
+* __[base name]__ : base name for output directory
+
+2nd step
+
+ ```
+  python summarizeSNVs.py [directory for tumor] [base name] [.bed file for CNV segments] [.FASTA of genome] 
+  
+  ```
+  * __[directory for tumor]__: path to directory containing aligned bam files to be tested. Example glioblastoma data, used in the manuscript, can be obtained [here](https://www.ebi.ac.uk/ega/studies/EGAS00001002185).
+  
+ * __[base name]__ : base name for output directory
+   
+ * __[BED file for CNV segments]__: tab-delimited bed file of CNV segments to be quantified.
+  
+      ```
+      [chromosome]	[start]	[end]	[chromosome:start:end:CNV]
+      ```
+      
+      Note: the 4th column of the file must have the exact format shown here:(__Amp__: amplification, __Del__: deletion)
+  ```
+  7   19533   157408385   7:19533:157408385:Amp
+  9   19116859    32405639    9:19116859:32405639:Del
+  ```
+* __[.FASTA of genome]__: Genome the single cell RNA-seq reads were mapped to in FASTA format
 
 
 ### Output
