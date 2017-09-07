@@ -66,7 +66,4 @@ for line in tumorVcf:
 							vaf=1-vaf
 							cands[f[0]+"\t"+f[1]][0]=1-cands[f[0]+"\t"+f[1]][0]
 						print(f[0]+"\t"+f[1]+"\t"+f[1]+"\t"+cands[f[0]+"\t"+f[1]][1]+"_"+a+"_"+b+"_"+str(cands[f[0]+"\t"+f[1]][0])+"_"+str(vaf)+"\t"+str(int(ref+alt))+"\t+")
-		else:
-			#What if only ref allele is retained in tumor?
-			None
 
