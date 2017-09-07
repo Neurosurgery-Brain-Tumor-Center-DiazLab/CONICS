@@ -73,7 +73,7 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
 ### Config file
 Adjust __CONICS.cfg__ to customize the following:
   * Path to python/bam-readcount/Rscript
-  * Path to genome which reads were mapped to
+  * Path to genome which reads were aligned to (FASTA format)
 
 ### Running
 
