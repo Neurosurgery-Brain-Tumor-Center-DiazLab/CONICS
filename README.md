@@ -64,8 +64,9 @@ All output files will be located in the directory __output_[base name]__.
 Regions of copy-number alteration will show a drop in the frequency of reads quantifying the minor allele. Averaged over large regions of copy-number alteration, this provides an additional metric to increase confidence in single-cell CNV-calls.
 
 ### Requirements
-  * [Python](https://www.python.org) and [Perl](https://www.perl.org)
-  ....
+  * [Python](https://www.python.org) and [R](https://cran.r-project.org/mirrors.html)
+  * [bam-readcount](https://github.com/genome/bam-readcount) 
+  * [gplots](https://cran.r-project.org/web/packages/gplots/index.html)
 
 ### Config file
 ....
