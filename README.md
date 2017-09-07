@@ -101,14 +101,24 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
   
 * __[.FASTA of genome]__: Genome the single cell RNA-seq reads were mapped to in FASTA format
 
+3rd step
+
+ ```
+  Rscript plotVAFs.R [af.txt] [bf.txt]
+  
+  ```
+  * __[af.txt]__: The file containing A allel frequencies for each SNV in each cell generated in step 2.
+  
+ * __[bf.txt]__ : The file containing B allel frequencies for each SNV in each cell generated in step 2.
+  
 
 ### Output
 All output files will be located in the directory __output_[base name]__
-  1. ___germline-snvs.bed__: BED file containing position and BAFs from Exome-seq
-  2. ___af.txt__: TAB separated table containing the counts for the A allele at each locus in each cell
-  3. ___bf.txt__: TAB separated table containing the counts for the B allele at each locus in each cell
-  4. baf_hist.pdf Hierarchical clustering of the average B allele frequency in each of the loci altered by copy number for each cell
-
+  1. ___germline-snvs.bed__: BED file containing position and BAFs from Exome-seq, generated in step 1.
+  2. ___af.txt__: TAB separated table containing the counts for the A allele at each locus in each cell, generated in step 2
+  3. ___bf.txt__: TAB separated table containing the counts for the B allele at each locus in each cell, generated in step 2
+  4. baf_hist.pdf Hierarchical clustering of the average B allele frequency in each of the loci altered by copy number for each cell, generated in step 3
+  
 ![heatmap](images/heatmap_sf10345.jpg?raw=true "B-allele heatmap" )
 
 ## <a id="Constructing_Tree"></a> Phylogenetic tree contruction
