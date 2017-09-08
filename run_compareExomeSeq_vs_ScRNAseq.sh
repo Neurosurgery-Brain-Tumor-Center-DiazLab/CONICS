@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source CompareExomeSeq_vs_ScRNAseq.cfg
+source ./CompareExomeSeq_vs_ScRNAseq.cfg
 
 input=${1}
 output_base=${2}
