@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source Empirical_validation.cfg
+source ./Empirical_validation.cfg
 
 train_bam=${1}
 test_bam=${2}
