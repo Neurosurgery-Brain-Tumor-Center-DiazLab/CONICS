@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source CorrelationNetwork.cfg
+source ./CorrelationNetwork.cfg
 
 expression=${1}
 gene=${2}
