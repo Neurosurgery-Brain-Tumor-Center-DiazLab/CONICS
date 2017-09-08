@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source CONICS.cfg
+source ./CONICS.cfg
 
 tumor_bam=${1}
 normal_bam=${2}
