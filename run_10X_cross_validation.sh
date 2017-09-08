@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source 10X_cross_validation.cfg
+source ./10X_cross_validation.cfg
 
 normal_bam=${1}
 cnv_bed=${2}
