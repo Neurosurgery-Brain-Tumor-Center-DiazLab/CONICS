@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source Tree.cfg
+source ./Tree.cfg
 
 input_mat=${1}
 cluster=${2}
