@@ -2,13 +2,40 @@
 *CONICS*: *CO*py-*N*umber analysis *I*n single-*C*ell RNA-*S*equencing
 
 ## Table of contents
-- [Identifying CNVs from scRNA-seq](#Calling_CNV)
-- [Integrating the minor-allele frequencies of point mutations](#B_allele_freqs)
+- [Identifying CNVs from scRNA-seq with count table (R tutorial)](#Calling_CNV_R)
+- [Identifying CNVs from scRNA-seq with BAM files (advanced users)](#Calling_CNV)
+- [Integrating the minor-allele frequencies of point mutations with BAM files (advanced users)](#B_allele_freqs)
 - [Phylogenetic tree contruction](#Constructing_Tree)
 - [Intra-clone co-expression networks](#CX_Net)
 - [Assessing the correlation of CNV status with single-cell expression](#Corr)
 - [False discovery rate estimation: Cross validation](#10x)
 - [False discovery rate estimation: Empirical testing](#Empirical)
+
+
+## <a id="Calling_CNV_R"></a> Identifying CNVs from scRNA-seq using a count table - CONICSmat
+
+Here we describe how to identify large-scale CNVs in scRNA-seq data using a gene X cells count table. 
+
+### Installation
+To use CONICS_CNV you will also need to install biomaRt, beanplot, mixtools and pheatmap.
+
+  ```
+  install.packages("beanplot")
+  install.packages("mixtools")
+  install.packages("pheatmap")
+  install.packages("devtools")
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("biomaRt")
+  
+  ```
+And to install CONCICSmat
+
+  ```
+devtools::install_github("diazlab/CONICS/CONICSmat", dep = FALSE)
+
+  ```
+  
+
 
 
 ## <a id="Calling_CNV"></a> Identifying CNVs from scRNA-seq 
