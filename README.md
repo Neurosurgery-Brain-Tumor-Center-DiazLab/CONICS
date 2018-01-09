@@ -35,6 +35,7 @@ devtools::install_github("diazlab/CONICS/CONICSmat", dep = FALSE)
 
   ```
   
+A tutorial how to use the data on a Smart-Seq2 dataset can be found [here](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat).
 
 
 
