@@ -24,11 +24,11 @@ To use CONICS_CNV you will also need to install biomaRt, beanplot, mixtools and 
   install.packages("mixtools")
   install.packages("pheatmap")
   install.packages("devtools")
-  install.packages(Rtsne)
-  install.packages(squash)
+  install.packages("Rtsne")
+  install.packages("squash")
   source("https://bioconductor.org/biocLite.R")
   biocLite("biomaRt")
-  biocLite(scran)
+  biocLite("scran")
   ```
 And to install CONCICSmat
 
