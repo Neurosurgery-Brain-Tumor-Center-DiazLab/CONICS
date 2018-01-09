@@ -17,7 +17,7 @@
 Here we describe how to identify large-scale CNVs in scRNA-seq data using a gene X cells count table. 
 
 ### Installation
-To use CONICS_CNV you will also need to install biomaRt, beanplot, mixtools and pheatmap.
+To install CONICSmat you will also need to install additional R packages.
 
   ```
   install.packages("beanplot")
