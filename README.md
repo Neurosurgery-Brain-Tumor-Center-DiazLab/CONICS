@@ -33,6 +33,7 @@ To install CONICSmat you will also need to install additional R packages.
 And to install CONCICSmat
 
   ```
+library(devtools)
 devtools::install_github("diazlab/CONICS/CONICSmat", dep = FALSE)
 
   ```
