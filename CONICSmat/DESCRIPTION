@@ -1,0 +1,18 @@
+Package: CONICSmat
+Title: What the Package Does (one line, title case)
+Version: 0.0.0.1
+Authors@R: person("Soren", "Muller", email = "soeren.mueller@ucsf.edu", role = c("aut", "cre"))
+Description: CONICSmat is an R package for infering large-scale copy number variations (CNVs) from (single cell) RNA-sequencing data. CONICSmat utilizes gaussina mixture models to infer the copy number status of each sample in a set of regions provided by the user, or alternative for each chromosome. 
+Depends: R (>= 3.3.0)
+Imports:
+    beanplot,
+    mixtools,
+    pheatmap,
+    biomaRt,
+	Rtsne,
+	squash,
+	scran
+License: Licensed under GPL (version 2 or later).
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1.9000
