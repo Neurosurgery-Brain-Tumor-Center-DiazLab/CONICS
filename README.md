@@ -38,7 +38,7 @@ devtools::install_github("diazlab/CONICS/CONICSmat", dep = FALSE)
 
   ```
   
-A tutorial how to use the data on a Smart-Seq2 dataset can be found [here](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodnroglioma#tutorial---using-concismat-to-infer-cnvs-from-a-genes-x-cells-matrix).
+A tutorial how to use the data on a Smart-Seq2 dataset can be found [on the CONICSmat Wiki page](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodnroglioma#tutorial---using-concismat-to-infer-cnvs-from-a-genes-x-cells-matrix).
 
 
 
