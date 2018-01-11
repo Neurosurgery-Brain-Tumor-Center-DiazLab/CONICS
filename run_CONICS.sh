@@ -2,6 +2,8 @@
 
 source ./CONICS.cfg
 
+date +'%d/%m/%Y %H:%M:%S:%3N'
+
 tumor_bam=${1}
 normal_bam=${2}
 cnv_bed=${3}
@@ -46,4 +48,4 @@ rm ${out_dir}/${output_base}_tumor_rawMatrix.csv
 rm ${out_dir}/${output_base}_normal_cpmMatrix.csv
 rm ${out_dir}/${output_base}_tumor_cpmMatrix.csv
 
-
+date +'%d/%m/%Y %H:%M:%S:%3N'
