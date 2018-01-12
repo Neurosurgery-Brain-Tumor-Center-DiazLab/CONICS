@@ -42,10 +42,4 @@ ${path_to_python} ./backend/CalculateCoverageMatrix.py ${normal_bam} ${cnv_bed} 
 echo "============== <CNV calling> ====================="
 ${path_to_rscript} ./backend/plot_bean_CPM.R  ${out_dir}/${output_base}_tumor_cpmMatrix.csv ${out_dir}/${output_base}_normal_cpmMatrix.csv ${out_dir}/${output_base} ${fdrCutoff}
 
-
-rm ${out_dir}/${output_base}_normal_rawMatrix.csv
-rm ${out_dir}/${output_base}_tumor_rawMatrix.csv
-rm ${out_dir}/${output_base}_normal_cpmMatrix.csv
-rm ${out_dir}/${output_base}_tumor_cpmMatrix.csv
-
 date +'%d/%m/%Y %H:%M:%S:%3N'
