@@ -43,7 +43,7 @@ for file in files:
         for line in cnvResult.split("\n")[:-1]:
             line=line.rstrip()
             cpmExpr=str(float(line.split("\t")[-1])/cpm*1000000)
-            idf=line.split("\t")[3]
+            idf=line.split("\t")[3].rstrip()
             mat[cell][idf]=cpmExpr
             mat2[cell][idf]=line.split("\t")[-1]
     else:
