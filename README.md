@@ -40,7 +40,8 @@ devtools::install_github("diazlab/CONICS/CONICSmat", dep = FALSE)
   
 A tutorial how to use CONICSmat with a Smart-Seq2 dataset can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
 
-
+<br>
+<br>
 
 ## <a id="Calling_CNV"></a> Identifying CNVs from scRNA-seq 
 
