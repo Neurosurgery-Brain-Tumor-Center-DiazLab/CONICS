@@ -14,7 +14,8 @@
 
 ## <a id="Calling_CNV_R"></a> CONICSmat - Identifying CNVs from scRNA-seq using a count table 
 
-CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data without the need of an explicit control dataset. Also, genomic coordinates of CNVs are optional. The user can provide the data as a gene X cells count table. 
+CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data without the need of an explicit normal control dataset. Also, genomic coordinates of CNVs are optional. The user can provide the data as a gene X cells count table. 
+
 
 
   
