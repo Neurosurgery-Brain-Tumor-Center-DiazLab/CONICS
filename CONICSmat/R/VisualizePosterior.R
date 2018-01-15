@@ -45,7 +45,7 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,groups1=NULL,gr
       beanplot::beanplot(scale(chr_exp),col=cellcolor,what=c(0,1,1,0),ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)))
       plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,col=cellcolor,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
       #Problematic if unique gives wrong order of colors
-      legend("topright", col=unique(cellcolor), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
+      legend("topright", col=c("black","red"), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
     }
     else{
       plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
