@@ -12,38 +12,18 @@
 - [False discovery rate estimation: Empirical testing](#Empirical)
 
 
-## <a id="Calling_CNV_R"></a> Identifying CNVs from scRNA-seq using a count table - CONICSmat
+## <a id="Calling_CNV_R"></a> CONICSmat - Identifying CNVs from scRNA-seq using a count table 
 
-Here we describe how to identify large-scale CNVs in scRNA-seq data using a gene X cells count table. 
+CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data without the need of an explicit control dataset. Also, genomic coordinates of CNVs are optional. The user can provide the data as a gene X cells count table. 
 
-### Installation
-To install CONICSmat you will also need to install additional R packages.
 
-  ```
-  install.packages("beanplot")
-  install.packages("mixtools")
-  install.packages("pheatmap")
-  install.packages("devtools")
-  install.packages("Rtsne")
-  install.packages("squash")
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("biomaRt")
-  biocLite("scran")
-  ```
-And to install CONCICSmat
-
-  ```
-library(devtools)
-devtools::install_github("diazlab/CONICS/CONICSmat", dep = FALSE)
-
-  ```
   
 A tutorial how to use CONICSmat with a Smart-Seq2 dataset can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
 
 <br>
 <br>
 
-## <a id="Calling_CNV"></a> Identifying CNVs from scRNA-seq 
+## <a id="Calling_CNV"></a> CONICS - Identifying CNVs from scRNA-seq with alignment files 
 
 ### Requirements
   * [Python](https://www.python.org) and [Perl](https://www.perl.org)
