@@ -58,6 +58,10 @@ Adjust __CONICS.cfg__ to customize the following:
   * Path to python/samtools/bedtools/Rscript
   * Thresholds for mapping-quality and read-count
   * FDR for CNV calling
+  
+### Test data 
+
+A set of tumor cells from three glioblastoma patients and a normal brain control, as well as a file with genomic coordinate of large-scale CNVs are available [here](https://goo.gl/1dyafr). 
 
 ### Running
 
