@@ -2,9 +2,9 @@
 *CONICS*: *CO*py-*N*umber analysis *I*n single-*C*ell RNA-*S*equencing
 
 ## Table of contents
-- [Identifying CNVs from scRNA-seq with count table (R tutorial)](#Calling_CNV_R)
-- [Identifying CNVs from scRNA-seq with BAM files (advanced users)](#Calling_CNV)
-- [Integrating the minor-allele frequencies of point mutations with BAM files (advanced users)](#B_allele_freqs)
+- [CONICSmat - Identifying CNVs from scRNA-seq with only a count table (R tutorial)](#Calling_CNV_R)
+- [Identifying CNVs from scRNA-seq using aligned reads and a control dataset (advanced users)](#Calling_CNV)
+- [Integrating the minor-allele frequencies of point mutations (advanced users)](#B_allele_freqs)
 - [Phylogenetic tree contruction](#Constructing_Tree)
 - [Intra-clone co-expression networks](#CX_Net)
 - [Assessing the correlation of CNV status with single-cell expression](#Corr)
@@ -14,7 +14,7 @@
 
 ## <a id="Calling_CNV_R"></a> CONICSmat - Identifying CNVs from scRNA-seq using a count table 
 
-CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data without the need of an explicit normal control dataset. Also, genomic coordinates of CNVs are optional. The user can provide the data as a gene X cells count table. Probablilities for the presence/absence for a CNV in a cell are assigned via a Gaussian Mixture Model. For a tutorial on how to use CONICSmat with a Smart-Seq2 dataset can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
+CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data from a gene expression table, without the need of an explicit normal control dataset. A tutorial on how to use CONICSmat, and a Smart-Seq2 dataset, can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
 
 ![overview](images/conics_overview.jpg "overview" )
 <i> Visualizations of scRNA-seq [data](https://www.nature.com/articles/nature20123/) from oligodendroglioma (Tirosh et al., 2016) generated with CONICSmat. </i>
