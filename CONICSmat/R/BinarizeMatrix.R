@@ -47,7 +47,7 @@ binarizeCalls = function (mixmdl,normal,tumor,threshold,withna=T){
 #' @examples
 #' binarizeCalls(mixmdl,normal,tumor,threshold,withna=T)
 
-binarizeMatrix = function (mixmat,normal,tumor,threshold,withna=T){
+binarizeMatrix = function (mixmat,normal,tumor,threshold=0.8,withna=T){
   res=apply(mixmat,2,function (x) binarizeCalls(x,normal,tumor,threshold,withna=T)$integer)
   nms=apply(mixmat,2,function (x) binarizeCalls(x,normal,tumor,threshold,withna=T)$status)
   colnames(res)=paste(nms,colnames(res),sep="_")
@@ -80,5 +80,41 @@ plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL){
     pheatmap::pheatmap(t(mati),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
   }
 }
+
+#' Calculate a matrix of p-values from posterior probabilities.
+#'
+#' This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
+#' @param mati A cells X regions matrix 
+#' @param normal Vector of positions indicating the indices that identify posteriors assigned to normal cells.
+#' @param tumor Vector of positions indicating the indices that identify posteriors assigned to tumor cells.
+#' @param patients A vector of length(nrow(mati)) indicating the patient for each cell.
+#' @param patient Optional: Which patient should the matrix be plotted for.
+#' @keywords Binarizee vector
+#' @export
+#' @examples
+#' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
+CalcAdjPval = function (mixmdl,normal,tumor,threshold=0.8){
+  g1=length(which(mixmdl[normal]>threshold))
+  g2=length(which((1-mixmdl[normal])>threshold))
+  status=""
+  if (g1>g2){
+    status="del"
+    resV=ifelse(mixmdl<(1-threshold),1,0)
+    if (withna==T){
+      resV[which(mixmdl<threshold & mixmdl>(1-threshold))]=NA
+    }
+    
+  }
+  else{
+    status="amp"
+    resV=ifelse(mixmdl>threshold,1,0)
+    if (withna==T){
+      resV[which(mixmdl<threshold & mixmdl>(1-threshold))]=NA
+    }
+  }
+  res <- list("integer" = resV, "status" = status)
+  return(res)
+}
+
 
 

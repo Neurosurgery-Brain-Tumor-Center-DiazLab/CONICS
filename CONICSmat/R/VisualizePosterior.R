@@ -1,3 +1,37 @@
+#' Calculate the BIC (information-theoretic criteria) for a mixture model. 
+#'
+#' This function calculate the BIC (information-theoretic criteria) for a mixture model. 
+#' @param l1 Log likelihood 1
+#' @param l2 Log likelihood 1
+#' @param n Number of total tests for Benfferroni correction
+#' @keywords Detect varibale genes
+#' @export
+#' @examples
+#' detectVarGenes(suva_exp,500)
+
+BIC.mix = function(out){
+	bc=-2*out$loglik+log(length(out$x))*(length(unlist(out[2:4]))-1)
+	return(bc)
+}
+
+#' Perform likelihood ratio test given two log likelihoods and a integer numbe rindicating the number of tests performed for multiple testing correction 
+#'
+#' This function performs a likelihood ratio test given two log likelihoods and a integer numbe rindicating the number of tests performed for multiple testing correction 
+#' @param l1 Log likelihood 1
+#' @param l2 Log likelihood 1
+#' @param n Number of total tests for Benfferroni correction
+#' @keywords Detect varibale genes
+#' @export
+#' @examples
+#' detectVarGenes(suva_exp,500)
+
+likelihoodRatioTest = function(l1,l2,n){
+	lrt= -2*l1 -(-2*l2)
+	res=min(pchisq(lrt, df=2, lower.tail=FALSE)*n,1)
+	print(n)
+	return(res)
+}
+
 #' Estimate a two-component Gaussian Mixture Model based on a log2(CPM/10+1) expression matrix 
 #'
 #' This function estimates a two component Gaussian Mixture Model on log2(CPM/10+1) expression matrix.
@@ -14,7 +48,8 @@
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotChrEnichment = function(expmat,chr,normFactor,gene_positions,groups1=NULL,groups2=NULL,start=NULL,end=NULL){
+plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2){
+  par(mfrow=c(2,2))
   if (!is.null(groups1)){
 	cellcolor=rep("black",(length(groups1)+length(groups2)));cellcolor[groups2]="red"
   }
@@ -30,7 +65,16 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,groups1=NULL,gr
   if(length(chr_genes)>100){
     chr_exp=scale(colMeans(expmat[intersect(chr_genes,row.names(expmat)),])-normFactor)
     wait = chr_exp
-    mixmdl = mixtools::normalmixEM(wait)
+    mixmdl = mixtools::normalmixEM(wait,k=k,maxit = 1000,maxrestarts=10)
+	out1 = list(x=wait,mu=mean(wait),sigma=sd(wait),lambda=1,loglik=sum(dnorm(wait,mean(wait),sd(wait),log=TRUE)))
+	bics = c(BIC.mix(out1),BIC.mix(mixmdl))
+	lrt= round(likelihoodRatioTest (out1$loglik,mixmdl$loglik,n),6)
+	mixmdl$BIC=bics
+	mixmdl$lrt=lrt
+	if (mixmdl$lambda [1]<0.02 | mixmdl$lambda [2]<0.02){
+			lrt="Not calculated. More than 98 perc of\n cells assigned to one component."
+		}
+	print(lrt)
     plot(mixmdl,which=2,breaks=50,col1=c("red","green"),main2=paste("Chr: ",chr,":",start,":",end,"\n","Log likelihood ",round(mixmdl$loglik,1),sep=""),lwd2=3,xlab2="Expression z-score")
     if (length(cellcolor)>1){
       g1=length(which(mixmdl$posterior[groups1,1]>0.95))/length(groups1)*100
@@ -42,19 +86,17 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,groups1=NULL,gr
       barplot(rbind(c(g1,g2,g3),c(g4,g5,g6)),ylim=c(0,100),beside=T,ylab="Percentage of cells",names=c("Cluster","Cluster","Ambigu"),legend = c("Non-malignant", "Malignant"),args.legend = list(title = "Pred. via transcript.", x = "topright", cex = .65),xlab="Predicted via transcriptomics")
       axis(1, at=c(0.5,1,2,3,3.3), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="red")
       axis(1, at=c(3.5,4,5,6,6.5), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="green")
-      beanplot::beanplot(scale(chr_exp),col=cellcolor,what=c(0,1,1,0),ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)))
+      barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
       plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,col=cellcolor,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
       #Problematic if unique gives wrong order of colors
       legend("topright", col=c("black","red"), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
     }
     else{
       plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+	  barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
       hist(mixmdl$posterior[,1],main="Posterior probablility distribution\n component 1",xlab="Posterior probability",breaks=20,xlim=c(0,1))
-      hist(mixmdl$posterior[,2],main="Posterior probablility distribution\n component 2",xlab="Posterior probability",breaks=20,xlim=c(0,1))
     }
-    #return(length(intersect(chr_genes,row.names(expmat))))
     return(mixmdl)
-    
   }
 }
 
@@ -76,11 +118,16 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,groups1=NULL,gr
 plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL){
   pdf(paste(fname,"_CNVs.pdf",sep=""))
   loglik=c()
+  bic=c()
+  lrt=c()
+  restarts=c()
   for(i in 1:nrow(regions)){
-    par(mfrow=c(2,2))
     if (i==1){
-      mixmdl=plotChrEnichment(mat,regions[i,1],normFactor,gene_pos,normal,tumor,regions[i,2],regions[i,3])
+      mixmdl=plotChrEnichment(mat,regions[i,1],normFactor,gene_pos,nrow(regions),normal,tumor,regions[i,2],regions[i,3])
       loglik=c(loglik,mixmdl$loglik)
+	  bic=c(bic,mixmdl$BIC)
+	  lrt=c(lrt,mixmdl$lrt)
+	  restarts=c(restarts,mixmdl$restarts)
       if (mixmdl$mu[1]>mixmdl$mu[2]){
         l=mixmdl$posterior[,1]
       }
@@ -89,11 +136,18 @@ plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL
       }
     }
     else{
-      mixmdl=plotChrEnichment(mat,regions[i,1],normFactor,gene_pos,normal,tumor,regions[i,2],regions[i,3])
+      mixmdl=plotChrEnichment(mat,regions[i,1],normFactor,gene_pos,nrow(regions),normal,tumor,regions[i,2],regions[i,3])
       if (!is.null(mixmdl)){
         loglik=c(loglik,mixmdl$loglik)
-        names(loglik)[1]="1p"
+		bic=c(bic,mixmdl$BIC)
+		lrt=c(lrt,mixmdl$lrt)
+		restarts=c(restarts,mixmdl$restarts)
+        names(loglik)[1]=rownames(regions)[1]
         names(loglik)[length(loglik)]=rownames(regions)[i]
+		names(bic)[1]=paste(rownames(regions)[1],"_1_comp",sep="_")
+		names(bic)[2]=paste(rownames(regions)[1],"_2_comp",sep="_")
+        names(bic)[length(bic)]=paste(rownames(regions)[i],"1_comp",sep="_")
+		names(bic)[length(bic)-1]=paste(rownames(regions)[i],"2_comp",sep="_")
         if (mixmdl$mu[1]>mixmdl$mu[2]){
           r=mixmdl$posterior[,1]
         }
@@ -109,6 +163,18 @@ plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL
   par(mfrow=c(1,1))
   barplot(sort(loglik),names=names(sort(loglik)),cex.axis=0.8,cex.names=0.7,las=2,ylab="log-likelihood")
   dev.off()
+  bicLRmat=matrix(ncol=4,nrow=length(loglik))
+  #gmmConvergece=ifelse(restarts==1000,"N","Y")
+  bicLRmat[,1]=bic[seq(1,(length(bic)-1),2)]
+  bicLRmat[,2]=bic[seq(2,length(bic),2)]
+  bicLRmat[,3]=bicLRmat[,1]-bicLRmat[,2]
+  #bicLRmat[,4]=restarts
+  #bicLRmat[,5]=gmmConvergece
+  bicLRmat[,ncol(bicLRmat)]=lrt
+  #colnames(bicLRmat)=c("BIC 1 component","BIC 2 components","BIC difference","GMM iterations","GMM converged","LRT adj. p-val")
+  colnames(bicLRmat)=c("BIC 1 component","BIC 2 components","BIC difference","LRT adj. p-val")
+  rownames(bicLRmat)=names(loglik)
+  write.table(bicLRmat,paste(fname,"BIC_LR.txt",sep="_"),sep="\t")
   return(l)
 }
 

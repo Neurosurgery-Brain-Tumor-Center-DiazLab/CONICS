@@ -3,15 +3,16 @@
 #' This function identifies the most variable genes from a matrix of raw gene counts to log2(CPM/10+1).
 #' @param expmat A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.
 #' @param ngenes Return the ngenes most variable genes.
+#' @param ngenes FDR threshold
 #' @keywords Detect varibale genes
 #' @export
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-detectVarGenes = function(mat,ngenes){
+detectVarGenes = function(mat,ngenes,FDR=0.00001){
   var.fit <- scran::trendVar(mat, parametric=TRUE, span=0.2)
   var.out <- scran::decomposeVar(mat, var.fit)
-  hvg.out <- var.out[which(var.out$FDR <= 0.00001),]
+  hvg.out <- var.out[which(var.out$FDR <= FDR),]
   hvg.out <- hvg.out[order(hvg.out$bio, decreasing=TRUE),]
   genes=rownames(hvg.out)[1:500]
   return(genes)
