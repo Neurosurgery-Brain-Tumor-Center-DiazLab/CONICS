@@ -48,7 +48,7 @@ likelihoodRatioTest = function(l1,l2,n){
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2){
+plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T){
   par(mfrow=c(2,2))
   if (!is.null(groups1)){
 	cellcolor=rep("black",(length(groups1)+length(groups2)));cellcolor[groups2]="red"
@@ -74,8 +74,10 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n,groups1=NULL,
 	if (mixmdl$lambda [1]<0.02 | mixmdl$lambda [2]<0.02){
 			lrt="Not calculated. More than 98 perc of\n cells assigned to one component."
 		}
-	print(lrt)
-    plot(mixmdl,which=2,breaks=50,col1=c("red","green"),main2=paste("Chr: ",chr,":",start,":",end,"\n","Log likelihood ",round(mixmdl$loglik,1),sep=""),lwd2=3,xlab2="Expression z-score")
+	#print(lrt)
+	if (vis==T){
+		plot(mixmdl,which=2,breaks=50,col1=c("red","green"),main2=paste("Chr: ",chr,":",start,":",end,"\n","Log likelihood ",round(mixmdl$loglik,1),sep=""),lwd2=3,xlab2="Expression z-score")
+	}
     if (length(cellcolor)>1){
       g1=length(which(mixmdl$posterior[groups1,1]>0.95))/length(groups1)*100
       g2=length(which(mixmdl$posterior[groups1,2]>0.95))/length(groups1)*100
@@ -83,18 +85,21 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n,groups1=NULL,
       g4=length(which(mixmdl$posterior[groups2,1]>0.95))/length(groups2)*100
       g5=length(which(mixmdl$posterior[groups2,2]>0.95))/length(groups2)*100
       g6=length(which(mixmdl$posterior[groups2,2]<0.95 & mixmdl$posterior[groups2,1]<0.95))/(length(groups2)+length(groups1))*100
-      barplot(rbind(c(g1,g2,g3),c(g4,g5,g6)),ylim=c(0,100),beside=T,ylab="Percentage of cells",names=c("Cluster","Cluster","Ambigu"),legend = c("Non-malignant", "Malignant"),args.legend = list(title = "Pred. via transcript.", x = "topright", cex = .65),xlab="Predicted via transcriptomics")
-      axis(1, at=c(0.5,1,2,3,3.3), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="red")
-      axis(1, at=c(3.5,4,5,6,6.5), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="green")
-      barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
-      plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,col=cellcolor,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
-      #Problematic if unique gives wrong order of colors
-      legend("topright", col=c("black","red"), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
+	  if (vis==T){
+		barplot(rbind(c(g1,g2,g3),c(g4,g5,g6)),ylim=c(0,100),beside=T,ylab="Percentage of cells",names=c("Cluster","Cluster","Ambigu"),legend = c("Non-malignant", "Malignant"),args.legend = list(title = "Pred. via transcript.", x = "topright", cex = .65),xlab="Predicted via transcriptomics")
+		axis(1, at=c(0.5,1,2,3,3.3), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="red")
+		axis(1, at=c(3.5,4,5,6,6.5), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="green")
+		barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
+		plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,col=cellcolor,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+		legend("topright", col=c("black","red"), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
+	  }
     }
     else{
-      plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
-	  barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
-      hist(mixmdl$posterior[,1],main="Posterior probablility distribution\n component 1",xlab="Posterior probability",breaks=20,xlim=c(0,1))
+	  if (vis==T){
+		plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+		barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
+		hist(mixmdl$posterior[,1],main="Posterior probablility distribution\n component 1",xlab="Posterior probability",breaks=20,xlim=c(0,1))
+	  }
     }
     return(mixmdl)
   }

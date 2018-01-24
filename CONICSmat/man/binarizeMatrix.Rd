@@ -4,7 +4,7 @@
 \alias{binarizeMatrix}
 \title{Binarize a matrix of posterior probabilities.}
 \usage{
-binarizeMatrix(mixmat, normal, tumor, threshold, withna = T)
+binarizeMatrix(mixmat, normal, tumor, threshold = 0.8, withna = T)
 }
 \arguments{
 \item{normal}{Vector of positions indicating the indices that identify posteriors assigned to normal cells.}

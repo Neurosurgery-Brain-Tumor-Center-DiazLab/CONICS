@@ -81,7 +81,7 @@ plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL){
   }
 }
 
-#' Calculate a matrix of p-values from posterior probabilities.
+#' Calculate p-values from a mixmdl object.
 #'
 #' This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
 #' @param mati A cells X regions matrix 
@@ -93,28 +93,51 @@ plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL){
 #' @export
 #' @examples
 #' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
-CalcAdjPval = function (mixmdl,normal,tumor,threshold=0.8){
-  g1=length(which(mixmdl[normal]>threshold))
-  g2=length(which((1-mixmdl[normal])>threshold))
+
+
+calcPvalue = function (mixmdl,normal,tumor,threshold=0.8){
+  largerMean=ifelse(mixmdl$mu[1]>mixmdl$mu[2],1,2)
+  smallerMean=ifelse(mixmdl$mu[1]<mixmdl$mu[2],1,2)
+  #Figure out if the normal cells are in the component with the larger or smaller mean
+  g1=length(which(mixmdl$posterior[normal,largerMean]>threshold))
+  g2=length(which((1-mixmdl$posterior[normal,largerMean])>threshold))
   status=""
   if (g1>g2){
     status="del"
-    resV=ifelse(mixmdl<(1-threshold),1,0)
-    if (withna==T){
-      resV[which(mixmdl<threshold & mixmdl>(1-threshold))]=NA
-    }
-    
+	resV=c()
+    for (i in 1:length(tumor)){resV=c(resV,pnorm(mean=mixmdl$mu[largerMean],sd=mixmdl$sigma[largerMean],mixmdl$x[tumor[i]],lower.tail=T))}
   }
   else{
     status="amp"
-    resV=ifelse(mixmdl>threshold,1,0)
-    if (withna==T){
-      resV[which(mixmdl<threshold & mixmdl>(1-threshold))]=NA
-    }
+    resV=c()
+    for (i in 1:length(tumor)){resV=c(resV,pnorm(mean=mixmdl$mu[smallerMean],sd=mixmdl$sigma[smallerMean],mixmdl$x[tumor[i]],lower.tail=F))}
   }
-  res <- list("integer" = resV, "status" = status)
-  return(res)
+  resV=p.adjust(resV,method="BH")
+  return(resV)
 }
 
+#' Calculate p-values from a mixmdl object.
+#'
+#' This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
+#' @param mati A cells X regions matrix 
+#' @param normal Vector of positions indicating the indices that identify posteriors assigned to normal cells.
+#' @param tumor Vector of positions indicating the indices that identify posteriors assigned to tumor cells.
+#' @param patients A vector of length(nrow(mati)) indicating the patient for each cell.
+#' @param patient Optional: Which patient should the matrix be plotted for.
+#' @keywords Binarizee vector
+#' @export
+#' @examples
+#' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
 
+generatePvalMat = function (mat,regions,normfactor,normal,tumor,gene_pos,threshold=0.8){
+	for (i in 1:nrow(regions)){
+		one=plotChrEnichment (mat,regions[i,1],normFactor,gene_pos,nrow(regions),normal,tumor,regions[i,2],regions[i,3],vis=F)
+		pv=calcPvalue(one,normal,tumor)
+		if (i==1){res=pv}
+		else{res=cbind(res,pv)}
+	}
+	colnames(res)=rownames(regions)
+	rownames(res)=colnames(mat[,tumor])
+	return(res)
+}
 
