@@ -160,7 +160,7 @@ plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL
           r=mixmdl$posterior[,2]
         }
         l=cbind(l,r)
-        colnames(l)[1]="1p"
+        colnames(l)[1]=rownames(regions)[1]
         colnames(l)[ncol(l)]=rownames(regions)[i]
       }
     }
