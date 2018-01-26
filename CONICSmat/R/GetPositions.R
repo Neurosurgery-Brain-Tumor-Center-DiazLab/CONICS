@@ -9,7 +9,7 @@
 #' getGenePositions(gene_names=c("EGFR","PDGFRA"))
 
 getGenePositions= function(gene_names,ensembl_version=87){
-  ensembl = biomaRt::useEnsembl(biomart="ensembl", dataset="hsapiens_gene_ensembl",version=ensembl_version)
+  ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "hsapiens_gene_ensembl", host="www.ensembl.org")
   gene_positions <- biomaRt::getBM(attributes=c('ensembl_gene_id','hgnc_symbol','chromosome_name','start_position','end_position'), filters ='hgnc_symbol', values =gene_names, mart = ensembl)
   gene_positions=gene_positions[!duplicated(gene_positions[,2]),]
   length(gene_positions[,1])
