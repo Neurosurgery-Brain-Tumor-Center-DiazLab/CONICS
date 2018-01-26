@@ -67,7 +67,7 @@ binarizeMatrix = function (mixmat,normal,tumor,threshold=0.8,withna=T){
 #' @examples
 #' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
 
-plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL){
+plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=4){
   celltypes=rep("Tumor",length(normal)+length(tumor));celltypes[normal]="Normal";names(celltypes)=c(names(normal),names(tumor))
   patientcolors =data.frame(celltypes)
   patientcolors=cbind(patientcolors,patients)
@@ -77,7 +77,7 @@ plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL){
     pheatmap::pheatmap(t(mati[which(patients==patient),]),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
   }
   else{
-    pheatmap::pheatmap(t(mati),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
+    pheatmap::pheatmap(t(mati),cluster_cols=T, cutree_cols = k,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
   }
 }
 
