@@ -67,7 +67,7 @@ binarizeMatrix = function (mixmat,normal,tumor,threshold=0.8,withna=T){
 #' @examples
 #' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
 
-plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=4){
+plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=3){
   celltypes=rep("Tumor",length(normal)+length(tumor));celltypes[normal]="Normal";names(celltypes)=c(names(normal),names(tumor))
   patientcolors =data.frame(celltypes)
   patientcolors=cbind(patientcolors,patients)
