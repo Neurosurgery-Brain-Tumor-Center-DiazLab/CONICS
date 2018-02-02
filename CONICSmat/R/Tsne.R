@@ -9,12 +9,12 @@
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-detectVarGenes = function(mat,ngenes,FDR=0.00001){
+detectVarGenes = function(mat,ngenes=500,FDR=0.00001){
   var.fit <- scran::trendVar(mat, parametric=TRUE, span=0.2)
   var.out <- scran::decomposeVar(mat, var.fit)
   hvg.out <- var.out[which(var.out$FDR <= FDR),]
   hvg.out <- hvg.out[order(hvg.out$bio, decreasing=TRUE),]
-  genes=rownames(hvg.out)[1:500]
+  genes=rownames(hvg.out)[1:ngenes]
   return(genes)
 }
 
