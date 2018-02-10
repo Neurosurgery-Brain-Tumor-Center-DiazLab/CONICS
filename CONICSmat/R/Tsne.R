@@ -10,10 +10,10 @@
 #' detectVarGenes(suva_exp,500)
 
 detectVarGenes = function(mat,ngenes=500,FDR=0.00001){
-  var.fit <- scran::trendVar(mat, parametric=TRUE, span=0.2)
-  var.out <- scran::decomposeVar(mat, var.fit)
-  hvg.out <- var.out[which(var.out$FDR <= FDR),]
-  hvg.out <- hvg.out[order(hvg.out$bio, decreasing=TRUE),]
+  var.fit = scran::trendVar(mat, span=0.2)
+  var.out = scran::decomposeVar(mat, var.fit)
+  hvg.out = var.out[which(var.out$FDR <= FDR),]
+  hvg.out = hvg.out[order(hvg.out$bio, decreasing=TRUE),]
   genes=rownames(hvg.out)[1:ngenes]
   return(genes)
 }
@@ -49,7 +49,7 @@ plotTsneGene  = function(rt,mat,genes,ncols=2){
   par(mfrow=c(ceiling((length(genes)/ncols)),ncols))
   par(mar=c(4,4,4,3))
   for (i in 1:length(genes)){
-    map <- squash::makecmap(mat[genes[i],], colFn = squash::bluered)
+    map = squash::makecmap(mat[genes[i],], colFn = squash::bluered)
     plot(rt$Y,pch=16,col=squash::cmap(mat[genes[i],], map = map),xlab="tSNE 1",ylab="tSNE 2",main=genes[i])
     squash::vkey(map, title="",stretch = 0.8)
   }
@@ -70,7 +70,7 @@ plotTsneGene  = function(rt,mat,genes,ncols=2){
 plotTsneProbabilities  = function(rt,mat,prob,pname,ncols=2){
   par(mfrow=c(1,1))
   par(mar=c(4,4,4,3))
-  map <- squash::makecmap(prob, colFn = squash::bluered)
+  map = squash::makecmap(prob, colFn = squash::bluered)
   plot(rt$Y,pch=16,col=squash::cmap(prob, map = map),xlab="tSNE 1",ylab="tSNE 2",main=pname)
   squash::vkey(map, title="",stretch = 0.8)
 }
