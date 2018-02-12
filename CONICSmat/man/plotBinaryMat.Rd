@@ -4,7 +4,7 @@
 \alias{plotBinaryMat}
 \title{Visualize a matrix of binary CNV assignments.}
 \usage{
-plotBinaryMat(mati, patients, normal, tumor, patient = NULL)
+plotBinaryMat(mati, patients, normal, tumor, patient = NULL, k = 3)
 }
 \arguments{
 \item{mati}{A cells X regions matrix}

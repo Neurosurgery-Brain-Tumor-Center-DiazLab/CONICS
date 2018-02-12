@@ -5,7 +5,7 @@
 \title{Applies detectBreakPoints() for all chromosomes and writes a pdf file with figures}
 \usage{
 plotAllChromosomes(mat, normal, tumor, windowsize, gene_pos, patients, patient,
-  fname, breakpoints)
+  fname, breakpoints, offs = 40)
 }
 \arguments{
 \item{mat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}

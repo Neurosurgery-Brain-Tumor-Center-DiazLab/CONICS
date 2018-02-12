@@ -4,7 +4,7 @@
 \alias{detectVarGenes}
 \title{Identify the most variable genes in a matrix}
 \usage{
-detectVarGenes(mat, ngenes, FDR = 1e-05)
+detectVarGenes(mat, ngenes = 500, FDR = 1e-05)
 }
 \arguments{
 \item{ngenes}{Return the ngenes most variable genes.}
