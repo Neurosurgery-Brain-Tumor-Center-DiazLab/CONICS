@@ -17,7 +17,7 @@
 CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data from a gene expression table, without the need of an explicit normal control dataset. A tutorial on how to use CONICSmat, and a Smart-Seq2 dataset, can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
 
 ![overview](images/conics_overview.jpg "overview" )
-<i> Visualizations of scRNA-seq [data](https://www.nature.com/articles/nature20123/) from oligodendroglioma (Tirosh et al., 2016) generated with CONICSmat. </i>
+<i> Visualizations of scRNA-seq data from [Oligodendroglioma](https://www.nature.com/articles/nature20123/) (Tirosh et al., 2016) generated with CONICSmat. </i>
 
 
 <br>
