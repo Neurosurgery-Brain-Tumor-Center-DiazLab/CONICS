@@ -159,6 +159,7 @@ plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL
   bicLRmat[,ncol(bicLRmat)]=lrt
   colnames(bicLRmat)=c("BIC 1 component","BIC 2 components","BIC difference","LRT adj. p-val")
   rownames(bicLRmat)=names(loglik)
+  rownames(l)=colnames(mat)
   write.table(bicLRmat,paste(fname,"BIC_LR.txt",sep="_"),sep="\t")
   return(l)
 }
