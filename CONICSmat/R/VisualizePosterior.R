@@ -59,7 +59,7 @@ likelihoodRatioTest = function(l1,l2,n){
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T){
+plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T){
   par(mfrow=c(2,2))
   if (!is.null(groups1)){
 	cellcolor=rep("black",(length(groups1)+length(groups2)));cellcolor[groups2]="red"
