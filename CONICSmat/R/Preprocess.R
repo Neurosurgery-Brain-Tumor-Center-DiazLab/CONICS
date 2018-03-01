@@ -1,3 +1,14 @@
+colMeans = function (expmat) {
+  n = apply(expmat,2,mean)
+  return(n)
+}
+
+rowMeans = function (expmat) {
+  n = apply(expmat,1,mean)
+  return(n)
+}
+
+
 #' Filter and expression matrix
 #'
 #' This function filters an expression matrix by removing genes which are expressed at low levels and in only very few samples.
