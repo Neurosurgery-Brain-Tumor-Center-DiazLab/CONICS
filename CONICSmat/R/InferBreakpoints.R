@@ -102,7 +102,7 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
 	#}
   }
   par(mfrow=c(1,1))
-  map <- squash::makecmap(res, colFn = squash::bluered)
+  map = squash::makecmap(res, colFn = squash::bluered)
   plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),pch=15,xaxt='n',yaxt='n',ann=FALSE)
   squash::vkey(map, title="",stretch = 0.8)
   for (i in 1:21){
@@ -161,7 +161,7 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	if (!is.null(chr)){
 		cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
 		hc = hclust(dist(t(rat[cg,])))
-		cellOrder <- hc$order
+		cellOrder = hc$order
 		d=d[,cellOrder]
 	}
 	
@@ -177,7 +177,7 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	  
 	  #Counter increase
 	  i <<- i + 1
-	  map <- squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
+	  map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
 	  if (i==1){
 		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
 		squash::vkey(map, title="",stretch = 0.1)
