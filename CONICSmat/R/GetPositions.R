@@ -8,11 +8,16 @@
 #' @examples
 #' getGenePositions(gene_names=c("EGFR","PDGFRA"))
 
-getGenePositions= function(gene_names,ensembl_version=87){
-  ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "hsapiens_gene_ensembl", host="http://dec2016.archive.ensembl.org")
-  gene_positions <- biomaRt::getBM(attributes=c('ensembl_gene_id','hgnc_symbol','chromosome_name','start_position','end_position'), filters ='hgnc_symbol', values =gene_names, mart = ensembl)
+getGenePositions= function(gene_names,ensembl_version="dec2016.archive.ensembl.org",species="human"){
+  if (species=="human"){
+	ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "hsapiens_gene_ensembl", host=paste("http://",ensembl_version,sep=""))
+	gene_positions <- biomaRt::getBM(attributes=c('ensembl_gene_id','hgnc_symbol','chromosome_name','start_position','end_position'), filters ='hgnc_symbol', values =gene_names, mart = ensembl)
+  }
+  else {
+	ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "mmusculus_gene_ensembl", host=paste("http://",ensembl_version,sep=""))
+	gene_positions <- biomaRt::getBM(attributes=c('ensembl_gene_id','mgi_symbol','chromosome_name','start_position','end_position'), filters ='mgi_symbol', values =gene_names, mart = ensembl)
+  }
   gene_positions=gene_positions[!duplicated(gene_positions[,2]),]
-  length(gene_positions[,1])
   gene_positions[which(gene_positions[,3]=="X"),3]=23
   gene_positions[which(gene_positions[,3]=="Y"),3]=24
   gene_positions[which(gene_positions[,3]=="MT"),3]=0

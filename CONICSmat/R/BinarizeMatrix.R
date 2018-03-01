@@ -21,7 +21,6 @@ binarizeCalls = function (mixmdl,normal,tumor,threshold,withna=T){
     if (withna==T){
       resV[which(mixmdl<threshold & mixmdl>(1-threshold))]=NA
     }
-    
   }
   else{
     status="amp"

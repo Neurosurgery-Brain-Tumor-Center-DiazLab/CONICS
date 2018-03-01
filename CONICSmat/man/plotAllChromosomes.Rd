@@ -4,8 +4,8 @@
 \alias{plotAllChromosomes}
 \title{Applies detectBreakPoints() for all chromosomes and writes a pdf file with figures}
 \usage{
-plotAllChromosomes(mat, normal, tumor, windowsize, gene_pos, patients, patient,
-  fname, breakpoints, offs = 40)
+plotAllChromosomes(mat, normal, tumor, windowsize, gene_pos, fname,
+  patients = NULL, patient = NULL, breakpoints = NULL, offs = 40)
 }
 \arguments{
 \item{mat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}
@@ -18,13 +18,13 @@ plotAllChromosomes(mat, normal, tumor, windowsize, gene_pos, patients, patient,
 
 \item{gene_pos}{Matrix with positional information for each gene}
 
-\item{patients}{Vector of patient identifiers for each cell}
-
-\item{patient}{Id of the patient to visualize}
-
 \item{fname}{Name for the output file}
 
-\item{breakpoints}{Chromosomal positions of chromosome arms}
+\item{Optional:}{patients Vector of patient identifiers for each cell}
+
+\item{Optional:}{patient Id of the patient to visualize}
+
+\item{Optional:}{breakpoints Chromosomal positions of chromosome arms}
 }
 \description{
 This function applies detectBreakPoints() for all chromosomes and writes a pdf file with figures

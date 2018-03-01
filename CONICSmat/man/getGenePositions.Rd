@@ -4,7 +4,8 @@
 \alias{getGenePositions}
 \title{Receive genomic coordinates of a gene list}
 \usage{
-getGenePositions(gene_names, ensembl_version = 87)
+getGenePositions(gene_names, ensembl_version = "dec2016.archive.ensembl.org",
+  species = "human")
 }
 \arguments{
 \item{gene_names}{A vector of gene names in HUGO format.}

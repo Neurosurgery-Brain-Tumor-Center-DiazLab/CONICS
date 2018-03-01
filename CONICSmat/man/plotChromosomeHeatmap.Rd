@@ -4,23 +4,29 @@
 \alias{plotChromosomeHeatmap}
 \title{Generates a heatmap of gene expression across the genome for each cell}
 \usage{
-plotChromosomeHeatmap(mat, normal, tumor, windowsize, chr = NULL,
-  expThresh = 0.4, thresh = 1)
+plotChromosomeHeatmap(mat, normal, plotcells, gene_pos, windowsize = 121,
+  chr = NULL, expThresh = 0.4, thresh = 1)
 }
 \arguments{
 \item{mat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}
 
-\item{normal}{Indices of columns holding normal cells.}
+\item{normal}{Vector of indices of columns holding normal cells.}
 
-\item{tumor}{Indices of columns holding tumor cells.}
+\item{plotcells}{Vector of indices of columns holding cells to plot.}
 
-\item{windowsize}{Size of the window smoothing the gene expression data}
+\item{gene_pos}{Matrix with positional information for each gene}
 
-\item{chr}{Optional: Order the heatmap based on the expression from this chromosome}
+\item{windowsize}{Integer size of the window smoothing the gene expression data}
+
+\item{chr}{Optional: Vector of chromosomes (integer) to order the heatmap}
+
+\item{expThresh}{Optional: Double threshold for the average expression of a gene across all cells to be considered in the calculation.}
+
+\item{thresh}{Optional: Double visualtization threshold: Rations above/below this threshold (x>t | x<(-t)) will be set to t | -t}
 }
 \description{
 This function generates a heatmap of gene expression across the genome for each cell
 }
 \examples{
-plotChromosomeHeatmap (suva_expr,normal,tumor,121,chr=11)
+plotChromosomeHeatmap (suva_expr,normal,tumor,gene_pos,chr=c(11))
 }

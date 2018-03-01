@@ -4,8 +4,8 @@
 \alias{detectBreakPoints}
 \title{Visualize normal/tumor ratio of genes expressed from the same chromosome and sorted by position}
 \usage{
-detectBreakPoints(mat, normal, tumor, windowsize, gene_pos, chr, patients,
-  patient, breakpoints)
+detectBreakPoints(mat, normal, tumor, windowsize, gene_pos, chr,
+  patients = NULL, patient = NULL, breakpoints = NULL)
 }
 \arguments{
 \item{mat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}
@@ -20,15 +20,15 @@ detectBreakPoints(mat, normal, tumor, windowsize, gene_pos, chr, patients,
 
 \item{chr}{Chromosome to plot}
 
-\item{patients}{Vector of patient identifiers for each cell}
+\item{patients}{Optional: Vector of patient identifiers for each cell}
 
-\item{patient}{Id of the patient to visualize}
+\item{patient}{Optional: Id of the patient to visualize}
 
-\item{breakpoints}{Chromosomal positions of chromosome arms}
+\item{Optional:}{Breakpoints Chromosomal positions of chromosome arms}
 }
 \description{
 This function allows to visualize the smoothed normal/tumor ratio of genes expressed from the same chromosome and sorted by position. This give information on breakpoints as well as CNV status (gain/loss)
 }
 \examples{
-detectBreakPoints (suva_exp,normal,tumor,101,gene_pos,1,patients,patient,breakpoints)
+detectBreakPoints (suva_exp,normal,tumor,101,gene_pos,1)
 }
