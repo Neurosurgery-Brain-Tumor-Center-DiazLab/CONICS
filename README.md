@@ -214,7 +214,7 @@ Adjust __CompareExomeSeq_vs_ScRNAseq.cfg__ to set the following:
   ```
   bash run_compareExomeSeq_vs_ScRNAseq.sh [matrix for read counts] [base name for output file]
   ```
-  * __[matrix for read counts]__: tab-delimited file of the number of mapped reads to each gene in the DNA sequencing and in scRNA-seq
+  * __[matrix for read counts]__: tab-delimited file of the number of mapped reads to each gene in the DNA sequencing and in scRNA-seq. Genes on each chromosome should be ordered by their chromosomal position.
   
       ```
       [gene] [chromosome] [start] [#read in DNA-seq(normal)] [#read in DNA-seq(tumor)] [#read in scRNA-seq(normal)] [#read in scRNA-seq(tumor)]
