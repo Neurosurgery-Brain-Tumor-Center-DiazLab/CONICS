@@ -30,6 +30,7 @@ detectVarGenes = function(mat,ngenes=500,FDR=0.00001){
 
 calculateTsne = function(mat,genes,dims=20,perplexity = 30){
   set.seed(10)
+  mat=as.matrix(mat)
   rt=Rtsne::Rtsne(t(mat[genes,]),initial_dims=dims,perplexity=perplexity)
   return(rt)
 }

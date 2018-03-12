@@ -7,21 +7,19 @@
 calcPvalue(mixmdl, normal, tumor, threshold = 0.8)
 }
 \arguments{
+\item{mixmdl}{An mixmdl object returned by the mixtools package.}
+
 \item{normal}{Vector of positions indicating the indices that identify posteriors assigned to normal cells.}
 
 \item{tumor}{Vector of positions indicating the indices that identify posteriors assigned to tumor cells.}
 
-\item{mati}{A cells X regions matrix}
-
-\item{patients}{A vector of length(nrow(mati)) indicating the patient for each cell.}
-
-\item{patient}{Optional: Which patient should the matrix be plotted for.}
+\item{threshold}{Optional: A threshold for binarizing the matrix. Example: For gains all cells with a posterior probability >threshold for the component with the larger mean will be assigned a 1.}
 }
 \description{
-This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
+This function generates p-values from a mixmdl object based on the mean and variance of the two components
 }
 \examples{
-plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
+calcPvalue (mixmdl,normal,tumor)
 }
-\keyword{Binarizee}
+\keyword{Binarize}
 \keyword{vector}

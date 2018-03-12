@@ -59,7 +59,7 @@ likelihoodRatioTest = function(l1,l2,n){
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T){
+plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T,postProb=0.95){
   par(mfrow=c(2,2))
   if (!is.null(groups1)){
 	cellcolor=rep("black",(length(groups1)+length(groups2)));cellcolor[groups2]="red"
@@ -75,36 +75,38 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
   }
   if(length(chr_genes)>100){
     chr_exp=scale(colMeans(expmat[intersect(chr_genes,row.names(expmat)),])-normFactor)
-    mixmdl = mixtools::normalmixEM(chr_exp,k=k,maxit = 1000,maxrestarts=10)
-	out1 = list(x=chr_exp,mu=mean(chr_exp),sigma=sd(chr_exp),lambda=1,loglik=sum(dnorm(chr_exp,mean(chr_exp),sd(chr_exp),log=TRUE)))
-	bics = c(BIC.mix(out1),BIC.mix(mixmdl))
-	lrt= round(likelihoodRatioTest (out1$loglik,mixmdl$loglik,n),6)
-	mixmdl$BIC=bics
-	mixmdl$lrt=lrt
-	if (vis==T){
-		plot(mixmdl,which=2,breaks=50,col1=c("red","green"),main2=paste("Chr: ",chr,":",start,":",end,"\n","Log likelihood ",round(mixmdl$loglik,1),sep=""),lwd2=3,xlab2="Expression z-score")
+	mixmdl = tryCatch(mixtools::normalmixEM(chr_exp,k=k,maxit = 1000,maxrestarts=10), error=function(e) {print(paste("EM algorithm did not converge for region",chr," ",start," ",end));return(NULL)})
+	if(!is.null(mixmdl)){
+		out1 = list(x=chr_exp,mu=mean(chr_exp),sigma=sd(chr_exp),lambda=1,loglik=sum(dnorm(chr_exp,mean(chr_exp),sd(chr_exp),log=TRUE)))
+		bics = c(BIC.mix(out1),BIC.mix(mixmdl))
+		lrt= round(likelihoodRatioTest (out1$loglik,mixmdl$loglik,n),6)
+		mixmdl$BIC=bics
+		mixmdl$lrt=lrt
+		if (vis==T){
+			plot(mixmdl,which=2,breaks=50,col1=c("red","green"),main2=paste("Chr: ",chr,":",start,":",end,"\n","Log likelihood ",round(mixmdl$loglik,1),sep=""),lwd2=3,xlab2="Expression z-score")
+		}
+		if (length(cellcolor)>1 & vis==T){
+		  g1=length(which(mixmdl$posterior[groups1,1]>postProb))/length(groups1)*100
+		  g2=length(which(mixmdl$posterior[groups1,2]>postProb))/length(groups1)*100
+		  g3=length(which(mixmdl$posterior[groups1,2]<postProb & mixmdl$posterior[groups1,1]<postProb))/length(groups1)*100
+		  g4=length(which(mixmdl$posterior[groups2,1]>postProb))/length(groups2)*100
+		  g5=length(which(mixmdl$posterior[groups2,2]>postProb))/length(groups2)*100
+		  g6=length(which(mixmdl$posterior[groups2,2]<postProb & mixmdl$posterior[groups2,1]<postProb))/(length(groups2)+length(groups1))*100
+		  barplot(rbind(c(g1,g2,g3),c(g4,g5,g6)),ylim=c(0,100),beside=T,ylab="Percentage of cells",names=c("Cluster","Cluster","Ambigu"),legend = c("Non-malignant", "Malignant"),args.legend = list(title = "Pred. via transcript.", x = "topright", cex = .65),xlab="Predicted via transcriptomics")
+		  axis(1, at=c(0.5,1,2,3,3.3), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="red")
+		  axis(1, at=c(3.5,4,5,6,6.5), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="green")
+		  barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
+		  plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,col=cellcolor,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+		  legend("topright", col=c("black","red"), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
+		}
+		else{
+		  if (vis==T){
+			plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+			barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
+			hist(mixmdl$posterior[,1],main="Posterior probablility distribution\n component 1",xlab="Posterior probability",breaks=20,xlim=c(0,1))
+		  }
+		}
 	}
-    if (length(cellcolor)>1 & vis==T){
-      g1=length(which(mixmdl$posterior[groups1,1]>0.95))/length(groups1)*100
-      g2=length(which(mixmdl$posterior[groups1,2]>0.95))/length(groups1)*100
-      g3=length(which(mixmdl$posterior[groups1,2]<0.95 & mixmdl$posterior[groups1,1]<0.95))/length(groups1)*100
-      g4=length(which(mixmdl$posterior[groups2,1]>0.95))/length(groups2)*100
-      g5=length(which(mixmdl$posterior[groups2,2]>0.95))/length(groups2)*100
-      g6=length(which(mixmdl$posterior[groups2,2]<0.95 & mixmdl$posterior[groups2,1]<0.95))/(length(groups2)+length(groups1))*100
-	  barplot(rbind(c(g1,g2,g3),c(g4,g5,g6)),ylim=c(0,100),beside=T,ylab="Percentage of cells",names=c("Cluster","Cluster","Ambigu"),legend = c("Non-malignant", "Malignant"),args.legend = list(title = "Pred. via transcript.", x = "topright", cex = .65),xlab="Predicted via transcriptomics")
-	  axis(1, at=c(0.5,1,2,3,3.3), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="red")
-	  axis(1, at=c(3.5,4,5,6,6.5), line=2, tick=T, labels=rep("",5), lwd=3, lwd.ticks=0,col="green")
-	  barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
-	  plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,col=cellcolor,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
-	  legend("topright", col=c("black","red"), c("Non-malignant","Malignant"), bty="o",  box.col="darkgreen", cex=.65,pch=16,title="Pred. via transcript.")
-    }
-    else{
-	  if (vis==T){
-		plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
-		barplot(bics,names=c("1","2"),ylab="BIC",pch=16,xlab="Number of components",log="y")
-		hist(mixmdl$posterior[,1],main="Posterior probablility distribution\n component 1",xlab="Posterior probability",breaks=20,xlim=c(0,1))
-	  }
-    }
     return(mixmdl)
   }
 }
@@ -124,14 +126,14 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL){
+plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL,postProb=0.95){
   pdf(paste(fname,"_CNVs.pdf",sep=""))
   loglik=c()
   bic=c()
   lrt=c()
   l=c()
   for(i in 1:nrow(regions)){
-    mixmdl=plotChrEnichment(mat,regions[i,1],normFactor,gene_pos,nrow(regions),normal,tumor,regions[i,2],regions[i,3])
+    mixmdl=plotChrEnichment(mat,regions[i,1],normFactor,gene_pos,nrow(regions),normal,tumor,regions[i,2],regions[i,3],postProb=postProb)
     if (!is.null(mixmdl)){
 		loglik=c(loglik,mixmdl$loglik)
 		bic=c(bic,mixmdl$BIC)

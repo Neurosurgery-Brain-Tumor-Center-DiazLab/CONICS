@@ -18,7 +18,7 @@ binarizeCalls(mixmdl, normal, tumor, threshold, withna = T)
 \item{withna}{Should posteriors that can't be assigned to component 1, but also not to component2, be set to 0 or NA (defualt is set to NA).}
 }
 \description{
-This function allows to binarize a matrix of posterior probabilities. Input is a matrix containing the posterior probabilities for the component with the larger mean from a Gaussian Mixture Model across different regions.
+This function allows to binarize posterior probabilities of a GMM. Input is a vector of posterior probabilities for the component with the larger mean from a Gaussian Mixture Model.
 }
 \examples{
 binarizeCalls(mixmdl,normal,tumor,threshold,withna=T)

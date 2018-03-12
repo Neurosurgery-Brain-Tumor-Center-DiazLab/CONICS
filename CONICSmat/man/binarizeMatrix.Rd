@@ -7,21 +7,21 @@
 binarizeMatrix(mixmat, normal, tumor, threshold = 0.8, withna = T)
 }
 \arguments{
+\item{mixmat}{Matrix of posterior probabilities between 0 and 1.}
+
 \item{normal}{Vector of positions indicating the indices that identify posteriors assigned to normal cells.}
 
 \item{tumor}{Vector of positions indicating the indices that identify posteriors assigned to tumor cells.}
 
-\item{threshold}{Posterior threshold level. The presence of a CNV is assigned to a cell if its posterior exceeds the threshold.}
+\item{threshold}{Optional: Posterior threshold level. The presence of a CNV is assigned to a cell if its posterior exceeds the threshold.}
 
-\item{withna}{Should posteriors that can't be assigned to component 1, but also not to component2, be set to 0 or NA (defualt is set to NA).}
-
-\item{mixmdl}{Vector of posterior probabilities between 0 and 1.}
+\item{withna}{Optional: Should posteriors that can't be assigned to component 1, but also not to component2, be set to 0 or NA (defualt is set to NA).}
 }
 \description{
-This function calls binarizeCalls() on all rows of a matrix
+This function allows to binarize a matrix of posterior probabilities. Input is a matrix containing the posterior probabilities for the component with the larger mean from a Gaussian Mixture Model across different regions.
 }
 \examples{
-binarizeCalls(mixmdl,normal,tumor,threshold,withna=T)
+binarizeMatrix (mixmat,normal,tumor)
 }
 \keyword{Binarizee}
 \keyword{vector}

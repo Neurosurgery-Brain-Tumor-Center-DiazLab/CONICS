@@ -4,8 +4,9 @@
 \alias{plotChrEnichment}
 \title{Estimate a two-component Gaussian Mixture Model based on a log2(CPM/10+1) expression matrix}
 \usage{
-plotChrEnichment(expmat, chr, normFactor, gene_positions, n, groups1 = NULL,
-  groups2 = NULL, start = NULL, end = NULL, k = 2, vis = T)
+plotChrEnichment(expmat, chr, normFactor, gene_positions, n = 1,
+  groups1 = NULL, groups2 = NULL, start = NULL, end = NULL, k = 2,
+  vis = T, postProb = 0.95)
 }
 \arguments{
 \item{expmat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}

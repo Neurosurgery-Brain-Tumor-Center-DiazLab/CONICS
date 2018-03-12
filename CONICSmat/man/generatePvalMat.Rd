@@ -8,21 +8,25 @@ generatePvalMat(mat, regions, normfactor, normal, tumor, gene_pos,
   threshold = 0.8)
 }
 \arguments{
+\item{mat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}
+
+\item{regions}{A matrix of regions to be evaluated}
+
 \item{normal}{Vector of positions indicating the indices that identify posteriors assigned to normal cells.}
 
 \item{tumor}{Vector of positions indicating the indices that identify posteriors assigned to tumor cells.}
 
-\item{mati}{A cells X regions matrix}
+\item{gene_pos}{A matrix of positions for every gene is the expression matrix, calculated via getGenePositions()}
 
-\item{patients}{A vector of length(nrow(mati)) indicating the patient for each cell.}
+\item{threshold}{Optional: A threshold for binarizing the matrix. Example: For gains all cells with a posterior probability >threshold for the component with the larger mean will be assigned a 1.}
 
-\item{patient}{Optional: Which patient should the matrix be plotted for.}
+\item{normFactor}{A vector of normalization factors for each cell calculated with calcNormFactors()}
 }
 \description{
-This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
+This function generates p-values from a log2(CPM/10+1) scaled gene expression matrix using the calcPvalue() function on all the regions given via the regions parameter
 }
 \examples{
-plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
+generatePvalMat(suva_expr,regions,normfactor,normal,tumor,gene_pos)
 }
 \keyword{Binarizee}
 \keyword{vector}

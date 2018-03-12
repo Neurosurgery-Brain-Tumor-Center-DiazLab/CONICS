@@ -1,6 +1,6 @@
 #' Binarize a vector of posterior probabilities.
 #'
-#' This function allows to binarize a matrix of posterior probabilities. Input is a matrix containing the posterior probabilities for the component with the larger mean from a Gaussian Mixture Model across different regions. 
+#' This function allows to binarize posterior probabilities of a GMM. Input is a vector of posterior probabilities for the component with the larger mean from a Gaussian Mixture Model.
 #' @param mixmdl Vector of posterior probabilities between 0 and 1.
 #' @param normal Vector of positions indicating the indices that identify posteriors assigned to normal cells.
 #' @param tumor Vector of positions indicating the indices that identify posteriors assigned to tumor cells.
@@ -35,16 +35,16 @@ binarizeCalls = function (mixmdl,normal,tumor,threshold,withna=T){
 
 #' Binarize a matrix of posterior probabilities.
 #'
-#' This function calls binarizeCalls() on all rows of a matrix
-#' @param mixmdl Vector of posterior probabilities between 0 and 1.
+#' This function allows to binarize a matrix of posterior probabilities. Input is a matrix containing the posterior probabilities for the component with the larger mean from a Gaussian Mixture Model across different regions. 
+#' @param mixmat Matrix of posterior probabilities between 0 and 1.
 #' @param normal Vector of positions indicating the indices that identify posteriors assigned to normal cells.
 #' @param tumor Vector of positions indicating the indices that identify posteriors assigned to tumor cells.
-#' @param threshold Posterior threshold level. The presence of a CNV is assigned to a cell if its posterior exceeds the threshold.
-#' @param withna Should posteriors that can't be assigned to component 1, but also not to component2, be set to 0 or NA (defualt is set to NA).
+#' @param threshold Optional: Posterior threshold level. The presence of a CNV is assigned to a cell if its posterior exceeds the threshold.
+#' @param withna Optional: Should posteriors that can't be assigned to component 1, but also not to component2, be set to 0 or NA (defualt is set to NA).
 #' @keywords Binarizee vector
 #' @export
 #' @examples
-#' binarizeCalls(mixmdl,normal,tumor,threshold,withna=T)
+#' binarizeMatrix (mixmat,normal,tumor)
 
 binarizeMatrix = function (mixmat,normal,tumor,threshold=0.8,withna=T){
   res=apply(mixmat,2,function (x) binarizeCalls(x,normal,tumor,threshold,withna=T)$integer)
@@ -82,16 +82,15 @@ plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=3){
 
 #' Calculate p-values from a mixmdl object.
 #'
-#' This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
-#' @param mati A cells X regions matrix 
+#' This function generates p-values from a mixmdl object based on the mean and variance of the two components
+#' @param mixmdl An mixmdl object returned by the mixtools package.
 #' @param normal Vector of positions indicating the indices that identify posteriors assigned to normal cells.
 #' @param tumor Vector of positions indicating the indices that identify posteriors assigned to tumor cells.
-#' @param patients A vector of length(nrow(mati)) indicating the patient for each cell.
-#' @param patient Optional: Which patient should the matrix be plotted for.
-#' @keywords Binarizee vector
+#' @param threshold Optional: A threshold for binarizing the matrix. Example: For gains all cells with a posterior probability >threshold for the component with the larger mean will be assigned a 1.
+#' @keywords Binarize vector
 #' @export
 #' @examples
-#' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
+#' calcPvalue (mixmdl,normal,tumor)
 
 
 calcPvalue = function (mixmdl,normal,tumor,threshold=0.8){
@@ -117,25 +116,28 @@ calcPvalue = function (mixmdl,normal,tumor,threshold=0.8){
 
 #' Calculate p-values from a mixmdl object.
 #'
-#' This function visualizes a matrix of binary CNV assignment. A 1 indicates the presence, a 0 the absence of a CNV
-#' @param mati A cells X regions matrix 
+#' This function generates p-values from a log2(CPM/10+1) scaled gene expression matrix using the calcPvalue() function on all the regions given via the regions parameter
+#' @param mat A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.
+#' @param regions A matrix of regions to be evaluated 
+#' @param normFactor A vector of normalization factors for each cell calculated with calcNormFactors()
 #' @param normal Vector of positions indicating the indices that identify posteriors assigned to normal cells.
 #' @param tumor Vector of positions indicating the indices that identify posteriors assigned to tumor cells.
-#' @param patients A vector of length(nrow(mati)) indicating the patient for each cell.
-#' @param patient Optional: Which patient should the matrix be plotted for.
+#' @param gene_pos A matrix of positions for every gene is the expression matrix, calculated via getGenePositions()
+#' @param threshold Optional: A threshold for binarizing the matrix. Example: For gains all cells with a posterior probability >threshold for the component with the larger mean will be assigned a 1.
 #' @keywords Binarizee vector
 #' @export
 #' @examples
-#' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
+#' generatePvalMat(suva_expr,regions,normfactor,normal,tumor,gene_pos)
 
 generatePvalMat = function (mat,regions,normfactor,normal,tumor,gene_pos,threshold=0.8){
+	res=c()
 	for (i in 1:nrow(regions)){
 		one=plotChrEnichment (mat,regions[i,1],normFactor,gene_pos,nrow(regions),normal,tumor,regions[i,2],regions[i,3],vis=F)
-		pv=calcPvalue(one,normal,tumor)
-		if (i==1){res=pv}
-		else{res=cbind(res,pv)}
+		if (!is.null(one)){
+			pv=calcPvalue(one,normal,tumor)
+			res=cbind(res,pv);colnames(res)[i]=rownames(regions)[i]
+		}
 	}
-	colnames(res)=rownames(regions)
 	rownames(res)=colnames(mat[,tumor])
 	return(res)
 }
