@@ -13,6 +13,11 @@ rowSums = function (expmat) {
 	return(n)
 }
 
+colSums = function (expmat) {
+	n = apply(expmat,2,sum)
+	return(n)
+}
+
 #' Filter and expression matrix
 #'
 #' This function filters an expression matrix by removing genes which are expressed at low levels and in only very few samples.
