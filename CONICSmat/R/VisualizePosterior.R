@@ -217,7 +217,11 @@ plotHistogram = function (pmat,expmat,clusters,zscoreThreshold=4,patients=NULL,c
     rownames(pmat)=names(celltypes)
     p=pheatmap::pheatmap(t(pmat),cluster_rows=F, cutree_cols = clusters, col=squash::bluered(100),gaps_col=50,annotation=patientcolors,show_colnames = F,clustering_distance_cols="euclidean")
   }
-print(p)
- return(heat.clusts = cutree(p$tree_col, k = clusters))
+ ord=unique(cutree(p$tree_col, k = clusters)[p$tree_col[["order"]]])
+ numb=table(cutree(p$tree_col, k = clusters))[ord]
+ n=length(numb)
+ grid::grid.text(expression(bold("Cluster ID \n(left to right)")),x=rep(0.92),y=c(n*0.03+0.03),gp=grid::gpar(fontsize=8, col="grey"))
+ grid::grid.text(ord,x=rep(0.92,length(numb)),y=seq(n*0.03, 0.03, -0.03),gp=grid::gpar(fontsize=8, col="grey"))
+ return(cutree(p$tree_col, k = clusters))
 }
 
