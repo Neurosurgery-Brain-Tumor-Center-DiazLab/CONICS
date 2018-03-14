@@ -189,9 +189,9 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	bps=c(0)
 	for (i in 1:21){
 	  gp=gp[which(gp[,2] %in% rownames(gexp)),]
-	  bp1=which(gp[,"chromosome_name"]==i+1)[1]-40
+	  bp1=which(gp[,"chromosome_name"]==i+1)[1]-windowsize/2
 	  bps=c(bps,bp1)
 	  abline(v=bp1,lty=16)
 	}
-	axis(1, at=bps[2:23]-((bps[2:23]-bps[1:22])/2)-40, labels=1:22, las=2,col="grey")
+	axis(1, at=bps[2:23]-((bps[2:23]-bps[1:22])/2), labels=1:22, las=2,col="grey")
 }
