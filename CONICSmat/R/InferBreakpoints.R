@@ -177,7 +177,8 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	  
 	  #Counter increase
 	  i <<- i + 1
-	  map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
+	  map = squash::makecmap(c(-thresh,thresh), colFn = squash::darkbluered,n=256)
+	  #map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
 	  if (i==1){
 		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
 		squash::vkey(map, title="",stretch = 0.1)
