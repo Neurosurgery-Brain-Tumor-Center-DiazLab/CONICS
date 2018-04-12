@@ -32,7 +32,12 @@ detectBreakPoints= function(mat,normal,tumor,windowsize,gene_pos,chr,patients=NU
 	#This can be refactored to speed up the function. The first part of the calculation is redundant for each function call
   normal_exp=rowMeans(removeLogScale(mat[,normal]))
   if (!is.null(patient)){
-	tumor_exp=rowMeans(removeLogScale(mat[,intersect(which(patients==patient),tumor)]))
+	if (length(intersect(which(patients==patient),tumor))>1){
+		tumor_exp=rowMeans(removeLogScale(mat[,intersect(which(patients==patient),tumor)]))
+	}
+	else {
+		tumor_exp=removeLogScale(mat[,intersect(which(patients==patient),tumor)])
+	}
   }
   else{
 	tumor_exp=rowMeans(removeLogScale(mat[,tumor]))
@@ -167,8 +172,7 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	
 	#Center in each cell and set to boundaries
 	d=apply(d,2,function(x) x-mean(x))
-	maxd=max(d)
-	mind=min(d)
+	dsize=500/length(plotcells)
 	i=0
 	apply(d,2,function(x){
 	  res=x
@@ -180,11 +184,11 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	  map = squash::makecmap(c(-thresh,thresh), colFn = squash::darkbluered,n=256)
 	  #map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
 	  if (i==1){
-		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
+		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),cex=dsize,pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
 		squash::vkey(map, title="",stretch = 0.1)
 	  }
 	  else{
-		points(c(1:length(res)),rep(i,length(res)),col=squash::cmap(res, map = map),pch=".")
+		points(c(1:length(res)),rep(i,length(res)),col=squash::cmap(res, map = map),pch=".",cex=dsize)
 	  }
 	})
 	bps=c(0)

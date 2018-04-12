@@ -6,7 +6,7 @@
 \usage{
 plotChrEnichment(expmat, chr, normFactor, gene_positions, n = 1,
   groups1 = NULL, groups2 = NULL, start = NULL, end = NULL, k = 2,
-  vis = T, postProb = 0.95)
+  vis = T, postProb = 0.95, repetitions = 1)
 }
 \arguments{
 \item{expmat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}
