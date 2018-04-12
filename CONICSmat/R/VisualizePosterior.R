@@ -59,7 +59,7 @@ likelihoodRatioTest = function(l1,l2,n){
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T,postProb=0.95,repetitions=20){
+plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NULL,groups2=NULL,start=NULL,end=NULL,k=2,vis=T,postProb=0.95,repetitions=5){
   par(mfrow=c(2,2))
   if (!is.null(groups1)){
 	cellcolor=rep("black",(length(groups1)+length(groups2)));cellcolor[groups2]="red"
@@ -133,7 +133,7 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL,postProb=0.95,repetitions=20){
+plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL,postProb=0.95,repetitions=5){
   pdf(paste(fname,"_CNVs.pdf",sep=""))
   loglik=c()
   bic=c()
