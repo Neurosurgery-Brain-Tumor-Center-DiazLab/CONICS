@@ -67,17 +67,23 @@ binarizeMatrix = function (mixmat,normal,tumor,threshold=0.8,withna=T){
 #' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
 
 plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=3){
-  celltypes=rep("Tumor",length(normal)+length(tumor));celltypes[normal]="Normal";names(celltypes)=c(names(normal),names(tumor))
-  patientcolors =data.frame(celltypes)
-  patientcolors=cbind(patientcolors,patients)
-  rownames(patientcolors)=names(celltypes)
-  rownames(mati)=names(celltypes)
-  if (!is.null(patient)){
-    pheatmap::pheatmap(t(mati[which(patients==patient),]),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
-  }
-  else{
-    pheatmap::pheatmap(t(mati),cluster_cols=T, cutree_cols = k,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
-  }
+	celltypes=rep("Tumor",length(normal)+length(tumor));celltypes[normal]="Normal";names(celltypes)=c(names(normal),names(tumor))
+	patientcolors =data.frame(celltypes)
+	patientcolors=cbind(patientcolors,patients)
+	rownames(patientcolors)=names(celltypes)
+	rownames(mati)=names(celltypes)
+	if (!is.null(patient)){
+		p=pheatmap::pheatmap(t(mati[which(patients==patient),]),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
+	}
+	else{
+		p=pheatmap::pheatmap(t(mati),cluster_cols=T, cutree_cols = k,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
+	}
+	ord=unique(cutree(p$tree_col, k = k)[p$tree_col[["order"]]])
+	numb=table(cutree(p$tree_col, k = k))[ord]
+	n=length(numb)
+	grid::grid.text(expression(bold("Cluster ID \n(left to right)")),x=rep(0.92),y=c(n*0.03+0.03),gp=grid::gpar(fontsize=8, col="grey"))
+	grid::grid.text(ord,x=rep(0.92,length(numb)),y=seq(n*0.03, 0.03, -0.03),gp=grid::gpar(fontsize=8, col="grey"))
+	return(cutree(p$tree_col, k = k))
 }
 
 #' Calculate p-values from a mixmdl object.

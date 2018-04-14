@@ -5,7 +5,7 @@
 \title{Estimate and visualize a two-component Gaussian Mixture Model based on a log2(CPM/10+1) expression matrix}
 \usage{
 plotAll(mat, normFactor, regions, gene_pos, fname, normal = NULL,
-  tumor = NULL, postProb = 0.95, repetitions = 1)
+  tumor = NULL, postProb = 0.95, repetitions = 5)
 }
 \arguments{
 \item{mat}{A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.}
