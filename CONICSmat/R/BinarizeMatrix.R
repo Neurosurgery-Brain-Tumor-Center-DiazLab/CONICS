@@ -67,11 +67,11 @@ binarizeMatrix = function (mixmat,normal,tumor,threshold=0.8,withna=T){
 #' plotBinaryMat(mati,patients,normal,tumor,patient="MGH96")
 
 plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=3){
-	celltypes=rep("Tumor",length(normal)+length(tumor));celltypes[normal]="Normal";names(celltypes)=c(names(normal),names(tumor))
+	celltypes=rep("Normal",nrow(mati));celltypes[tumor]="Tumor";names(celltypes)[normal]=names(normal);names(celltypes)[tumor]=names(tumor)
 	patientcolors =data.frame(celltypes)
 	patientcolors=cbind(patientcolors,patients)
 	rownames(patientcolors)=names(celltypes)
-	rownames(mati)=names(celltypes)
+	print(celltypes[which(patients==patient)])
 	if (!is.null(patient)){
 		p=pheatmap::pheatmap(t(mati[which(patients==patient),]),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
 	}
