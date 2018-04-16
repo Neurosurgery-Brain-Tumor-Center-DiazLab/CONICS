@@ -133,7 +133,7 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
 #' @examples
 #' detectVarGenes(suva_exp,500)
 
-plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL,postProb=0.95,repetitions=5){
+plotAll = function (mat,normFactor,regions,gene_pos,fname,normal=NULL,tumor=NULL,postProb=0.8,repetitions=4){
   pdf(paste(fname,"_CNVs.pdf",sep=""))
   loglik=c()
   bic=c()
