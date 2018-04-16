@@ -71,7 +71,6 @@ plotBinaryMat = function(mati,patients,normal,tumor,patient=NULL,k=3){
 	patientcolors =data.frame(celltypes)
 	patientcolors=cbind(patientcolors,patients)
 	rownames(patientcolors)=names(celltypes)
-	print(celltypes[which(patients==patient)])
 	if (!is.null(patient)){
 		p=pheatmap::pheatmap(t(mati[which(patients==patient),]),cluster_cols=T, cutree_cols = 3,annotation=patientcolors, col=c("lightgrey","black"),border_color = "grey60",show_colnames = F,clustering_distance_cols="euclidean")
 	}
