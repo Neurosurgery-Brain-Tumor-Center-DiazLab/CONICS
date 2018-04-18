@@ -76,6 +76,7 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
   if(length(chr_genes)>100){
     chr_exp=scale(colMeans(expmat[intersect(chr_genes,row.names(expmat)),])-normFactor)
 	bestlog=(-Inf)
+	bestmix=NULL
 	for (i in 1:repetitions){
 		mixmdl = tryCatch(mixtools::normalmixEM(chr_exp,k=k,maxit = 1000,maxrestarts=10), error=function(e) {print(paste("EM algorithm did not converge for region",chr," ",start," ",end));return(NULL)})
 		if (mixmdl$loglik>bestlog){
