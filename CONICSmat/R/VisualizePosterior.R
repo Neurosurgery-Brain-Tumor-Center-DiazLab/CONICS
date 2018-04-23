@@ -77,14 +77,24 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
     chr_exp=scale(colMeans(expmat[intersect(chr_genes,row.names(expmat)),])-normFactor)
 	bestlog=(-Inf)
 	bestmix=NULL
+	loglik=NULL
 	for (i in 1:repetitions){
-		mixmdl = tryCatch(mixtools::normalmixEM(chr_exp,k=k,maxit = 1000,maxrestarts=10), error=function(e) {print(paste("EM algorithm did not converge for region",chr," ",start," ",end));return(NULL)})
-		if (mixmdl$loglik>bestlog){
-			bestlog=mixmdl$loglik
-			bestmix=mixmdl
+		print(paste("Fitting GMM for chr",chr," ",start,":",end," iteration ",i,sep=""))
+		mixmdl = tryCatch(mixtools::normalmixEM(chr_exp,k=k,maxit = 1000,maxrestarts=10), error=function(e) {print(paste("EM algorithm did not converge for region",chr," ",start," ",end));mixmdl=NULL})
+		if(!is.null(mixmdl)){
+			if (mixmdl$loglik>bestlog){
+				bestlog=mixmdl$loglik
+				bestmix=mixmdl
+			}
 		}
 	}
-	if(!is.null(bestmix)){
+	if(is.null(bestmix)){
+		hist(chr_exp,breaks=50,main=paste("Chr: ",chr,":",start,":",end,"\n","Unable to fit 2 component mixture model",sep=""),lwd2=3,xlab2="Expression z-score")
+		plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+		hist(chr_exp,breaks=50,main=paste("Chr: ",chr,":",start,":",end,"\n","Unable to fit 2 component mixture model",sep=""),lwd2=3,xlab2="Expression z-score")
+		plot( runif(length(chr_exp), 0,100),chr_exp,pch=16,ylab="Expression z-score",ylim=c(min(chr_exp),(max(chr_exp)+2)),xlab="Cells")
+	}
+	else{
 		out1 = list(x=chr_exp,mu=mean(chr_exp),sigma=sd(chr_exp),lambda=1,loglik=sum(dnorm(chr_exp,mean(chr_exp),sd(chr_exp),log=TRUE)))
 		bics = c(max(BIC.mix(out1),1),max(BIC.mix(bestmix),1))
 		lrt= round(likelihoodRatioTest (out1$loglik,bestmix$loglik,n),6)
@@ -114,8 +124,8 @@ plotChrEnichment = function(expmat,chr,normFactor,gene_positions,n=1,groups1=NUL
 			hist(bestmix$posterior[,1],main="Posterior probablility distribution\n component 1",xlab="Posterior probability",breaks=20,xlim=c(0,1))
 		  }
 		}
+		return(bestmix)
 	}
-    return(bestmix)
   }
 }
 
