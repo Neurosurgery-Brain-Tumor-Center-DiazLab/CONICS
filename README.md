@@ -1,7 +1,7 @@
 # __CONICS__
 *CONICS*: *CO*py-*N*umber analysis *I*n single-*C*ell RNA-*S*equencing
 
-The CONICS paper has been accepted for publication in Bioinformatics. Check out the [preprint](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/bty316/4979546) !
+The CONICS paper has been accepted for publication in Bioinformatics. Check it out [here](https://doi.org/10.1093/bioinformatics/bty316) !
 
 ## Table of contents
 - [CONICSmat - Identifying CNVs from scRNA-seq with only a count table (R tutorial)](#Calling_CNV_R)
