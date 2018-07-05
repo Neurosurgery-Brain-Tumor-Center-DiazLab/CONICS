@@ -134,7 +134,7 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
 #' plotChromosomeHeatmap (suva_expr,normal,tumor,gene_pos,chr=c(11))
 
 
-plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=NULL,expThresh=0.4,thresh=1){
+plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1){
 	
 	#Create average of reference and matrix of tumor cells
 	ref=rowMeans(mat[,colnames(mat)[normal]])
@@ -160,25 +160,30 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	rat=gexp-ref
 	
 	#Smoothed expression
+	print(dim(rat))
 	d=apply (rat,2,function (x) zoo::rollapply(x,mean,width=windowsize,align="center"))
+	print(dim(d))
+	
+	#Center in each cell and set to boundaries
+	d=apply(d,2,function(x) x-mean(x))
+	
+	#Set min/max 
+	d[which(d>thresh)]=thresh
+	d[which(d<(-thresh))]=(-thresh)
 	
 	#Order by chromosome
-	if (!is.null(chr)){
-		cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
-		hc = hclust(dist(t(rat[cg,])))
+	if (chr){
+		#cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
+		#hc = hclust(dist(t(d[cg,])))
+		hc = hclust(dist(t(d[,])))
 		cellOrder = hc$order
 		d=d[,cellOrder]
 	}
 	
-	#Center in each cell and set to boundaries
-	d=apply(d,2,function(x) x-mean(x))
 	dsize=500/length(plotcells)
 	i=0
 	apply(d,2,function(x){
 	  res=x
-	  res[which(res>thresh)]=thresh
-	  res[which(res<(-thresh))]=(-thresh)
-	  
 	  #Counter increase
 	  i <<- i + 1
 	  map = squash::makecmap(c(-thresh,thresh), colFn = squash::darkbluered,n=256)
