@@ -21,39 +21,50 @@ removeLogScale=function(expmat){
 #' @param windowsize Size of the window smoothing the gene expression data
 #' @param gene_pos Matrix with positional information for each gene
 #' @param chr Chromosome to plot
-#' @param patients Vector of patient identifiers for each cell
-#' @param patient Id of the patient to visualize
-#' @param breakpoints Chromosomal positions of chromosome arms
+#' @param patients Optional: Vector of patient identifiers for each cell
+#' @param patient Optional: Id of the patient to visualize
+#' @param Optional: Breakpoints Chromosomal positions of chromosome arms
 #' @export
 #' @examples
-#' detectBreakPoints (suva_exp,normal,tumor,101,gene_pos,1,patients,patient,breakpoints)
+#' detectBreakPoints (suva_exp,normal,tumor,101,gene_pos,1)
 
-detectBreakPoints= function(mat,normal,tumor,windowsize,gene_pos,chr,patients,patient,breakpoints){
+detectBreakPoints= function(mat,normal,tumor,windowsize,gene_pos,chr,patients=NULL,patient=NULL,breakpoints=NULL){
+	#This can be refactored to speed up the function. The first part of the calculation is redundant for each function call
   normal_exp=rowMeans(removeLogScale(mat[,normal]))
-  tumor_exp=rowMeans(removeLogScale(mat[,intersect(which(patients==patient),tumor)]))
+  if (!is.null(patient)){
+	if (length(intersect(which(patients==patient),tumor))>1){
+		tumor_exp=rowMeans(removeLogScale(mat[,intersect(which(patients==patient),tumor)]))
+	}
+	else {
+		tumor_exp=removeLogScale(mat[,intersect(which(patients==patient),tumor)])
+	}
+  }
+  else{
+	tumor_exp=rowMeans(removeLogScale(mat[,tumor]))
+  }
   genes = which(normal_exp > 5 & tumor_exp > 5)
   normal_exp=log2(normal_exp+1)
   tumor_exp=log2(tumor_exp+1)
-  #normal_exp[which(normal_exp>10)]=10
-  #tumor_exp[which(tumor_exp>10)]=10
   ratio_nt=tumor_exp[names(genes)]-normal_exp[names(genes)]
   ratio_nt=ratio_nt-median(ratio_nt)
   gp=gene_pos[order(gene_pos[,"start_position"]),]
   gp=gp[which(gp[,3]==chr),]
-  rownames(gp)=gp[,2]
   target_genes=intersect(gp[,2],names(genes))
   if (length(target_genes)>windowsize){
     rat=zoo::rollapply(ratio_nt[target_genes],windowsize,mean,1,align="center")
-    pos=gp[target_genes,4][(windowsize/2):(length(target_genes)-(windowsize/2))]
-    at=which(abs(pos-breakpoints[(chr*2)-1,"End"])==min(abs(pos-breakpoints[(chr*2)-1,"End"])))
     plot(rat,pch=16,ylim=c(-2,2),ylab="Log2 Tumor/Normal ratio",main=paste("Chromosome",chr))
     abline(h=0,lty=16,col="grey",lwd=2)
     abline(h=-1,lty=16,col="blue",lwd=2)
     abline(h=0.58,lty=16,col="red",lwd=2)
     #add line for centromer
-    abline(v=at,lty=3)
-    text((at/2)-0.5,2,"p")
-    text((at+(((length(target_genes)-windowsize)-at)/2)+0.5),2,"q")
+	if (!is.null(breakpoints)){
+		rownames(gp)=gp[,2]
+		pos=gp[target_genes,4][(windowsize/2):(length(target_genes)-(windowsize/2))]
+		at=which(abs(pos-breakpoints[(chr*2)-1,"End"])==min(abs(pos-breakpoints[(chr*2)-1,"End"])))
+		abline(v=at,lty=3)
+		text((at/2)-0.5,2,"p")
+		text((at+(((length(target_genes)-windowsize)-at)/2)+0.5),2,"q")
+	}
   }
   else{
 	plot(c(1,1,1,1,1,1,1,1,1,1,1,1,1),pch=16,ylim=c(-2,2),ylab="Log2 Tumor/Normal ratio",main=paste("Chromosome",chr))
@@ -71,15 +82,15 @@ detectBreakPoints= function(mat,normal,tumor,windowsize,gene_pos,chr,patients,pa
 #' @param tumor Indices of columns holding tumor cells.
 #' @param windowsize Size of the window smoothing the gene expression data
 #' @param gene_pos Matrix with positional information for each gene
-#' @param patients Vector of patient identifiers for each cell
-#' @param patient Id of the patient to visualize
 #' @param fname Name for the output file
-#' @param breakpoints Chromosomal positions of chromosome arms
+#' @param Optional: patients Vector of patient identifiers for each cell
+#' @param Optional: patient Id of the patient to visualize
+#' @param Optional: breakpoints Chromosomal positions of chromosome arms
 #' @export
 #' @examples
 #' detectBreakPoints (suva_exp,normal,tumor,101,gene_pos,1,patients,patient,breakpoints)
 
-plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,patients,patient,fname,breakpoints,offs=40){
+plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patients=NULL,patient=NULL,breakpoints=NULL,offs=40){
   pdf(paste(fname,".pdf",sep=""))
   par(mfrow=c(2,2))
   res=c()
@@ -89,12 +100,14 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,patients,pati
     r=detectBreakPoints(mat,normal,tumor,windowsize,gene_pos,chr,patients,patient,breakpoints)
 	res=c(res,r)
 	bps=c(bps,bps[i]+length(r))
-	if (i==1){
+	
+	#For future breakpoint detection
+	#if (i==1){
 		#segment.smoothed.CNA.object <- segment(smoothed.CNA.object, verbose=1)
-	}
+	#}
   }
   par(mfrow=c(1,1))
-  map <- squash::makecmap(res, colFn = squash::bluered)
+  map = squash::makecmap(res, colFn = squash::bluered)
   plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),pch=15,xaxt='n',yaxt='n',ann=FALSE)
   squash::vkey(map, title="",stretch = 0.8)
   for (i in 1:21){
@@ -105,72 +118,98 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,patients,pati
   dev.off()
 }
 
-#' Applies detectBreakPoints() for all chromosomes and writes a pdf file with figures
+#' Generates a heatmap of gene expression across the genome for each cell 
 #'
-#' This function applies detectBreakPoints() for all chromosomes and writes a pdf file with figures
+#' This function generates a heatmap of gene expression across the genome for each cell 
 #' @param mat A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.
-#' @param normal Indices of columns holding normal cells.
-#' @param tumor Indices of columns holding tumor cells.
-#' @param windowsize Size of the window smoothing the gene expression data
+#' @param normal Vector of indices of columns holding normal cells.
+#' @param plotcells Vector of indices of columns holding cells to plot.
 #' @param gene_pos Matrix with positional information for each gene
-#' @param patients Vector of patient identifiers for each cell
-#' @param patient Id of the patient to visualize
-#' @param fname Name for the output file
-#' @param breakpoints Chromosomal positions of chromosome arms
+#' @param windowsize Integer size of the window smoothing the gene expression data
+#' @param chr Optional: Boolenan: Hierarchically cluster rows (cells) to identify clones. default: FALSE
+#' @param expThresh Optional: Double threshold for the average expression of a gene across all cells to be considered in the calculation. 
+#' @param thresh Optional: Double visualtization threshold: Rations above/below this threshold (x>t | x<(-t)) will be set to t | -t 
 #' @export
 #' @examples
-#' detectBreakPoints (suva_exp,normal,tumor,101,gene_pos,1,patients,patient,breakpoints)
+#' plotChromosomeHeatmap (suva_expr,normal,tumor,gene_pos,chr=c(11))
 
-plotChromosomeHeatmap= function (mat,normal,tumor,windowsize,chr){
+
+plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL){
+	
+	#Create average of reference and matrix of tumor cells
 	ref=rowMeans(mat[,colnames(mat)[normal]])
-	#gexp=as.matrix(suva_expr[,colnames(suva_expr)[tumor[1703:2874]]])
-	gexp=mat[,tumor]
-	gexp=gexp[which(ref>0),]
-	ref=ref[which(ref>0)]
-	gexp=gexp[which(rowMeans(gexp)>0.4),]
-
-	gp=getGenePositions(rownames(gexp))
-	gp=gp[order(as.numeric(gp[,"chromosome_name"]),as.numeric(gp[,"start_position"])),]
+	gexp=mat[,plotcells]
+	
+	#Filter matrices
+	ref=ref[which(ref>expThresh)]
+	gexp=gexp[names(ref),]
+	gexp=gexp[which(rowMeans(gexp)>expThresh),]
+	ref=ref[rownames(gexp)]
+	
+	#Get sorted gene positions
+	#gp=getGenePositions(rownames(gexp))
+	gp=gene_pos
 	gp=gp[which(gp[,"chromosome_name"] %in% 1:22),]
+	gp=gp[order(as.numeric(gp[,"chromosome_name"]),as.numeric(gp[,"start_position"])),]
+	
+	#Reduce matrix to genes with known positions
 	gexp=gexp[intersect(gp[,2],rownames(gexp)),]
 	ref=ref[rownames(gexp)]
-
-	ref=ref-mean(ref)
-	gexp=gexp-colMeans(gexp)
+	
+	#Calculate ratios
 	rat=gexp-ref
-
+	
+	#Smoothed expression
+	print(dim(rat))
 	d=apply (rat,2,function (x) zoo::rollapply(x,mean,width=windowsize,align="center"))
-	chromo=chr
-	# Improve this! Could be without renaming matrix rows
-	rownames(gp)=gp[,"hgnc_symbol"]
-	hc = hclust(dist(t(rat[which(gp[rownames(d),"chromosome_name"]==chromo),])))
-	cellOrder <- hc$order
-	d=d[,cellOrder]
-
-
-	for (i in 1:ncol(d)){
-	  res=d[,i]-mean(d[,i])
-	  map <- squash::makecmap(res, colFn = squash::darkbluered,n=256)
-	  
+	print(dim(d))
+	
+	#Center in each cell and set to boundaries
+	d=apply(d,2,function(x) x-mean(x))
+	
+	#Set min/max 
+	d[which(d>thresh)]=thresh
+	d[which(d<(-thresh))]=(-thresh)
+	
+	#Order by chromosome
+	if (chr){
+		#cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
+		#hc = hclust(dist(t(d[cg,])))
+		hc = hclust(dist(t(d[,])))
+		cellOrder = hc$order
+		d=d[,cellOrder]
+	}
+	
+	dsize=500/length(plotcells)
+	i=0
+	apply(d,2,function(x){
+	  res=x
+	  #Counter increase
+	  i <<- i + 1
+	  map = squash::makecmap(c(-thresh,thresh), colFn = squash::darkbluered,n=256)
+	  #map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
 	  if (i==1){
-		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),pch=15,xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
-		
-		squash::vkey(map, title="",stretch = 0.8)
+		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),cex=dsize,pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)+110))
+		if (!is.null(colo)){
+			points((length(res)+1):(length(res)+20),rep(1,20),col="white",pch=".",cex=dsize)
+			points((length(res)+21):(length(res)+110),rep(1,90),col=colo[i],pch=".",cex=dsize)
+		}
+		squash::hkey(map, title="",stretch = 0.1)
 	  }
 	  else{
-		points(c(1:length(res)),rep(i,length(res)),col=squash::cmap(res, map = map),pch=15,xaxt='n',yaxt='n',ann=FALSE)
+		points(c(1:length(res)),rep(i,length(res)),col=squash::cmap(res, map = map),pch=".",cex=dsize)
+		if (!is.null(colo)){
+			points((length(res)+1):(length(res)+20),rep(i,20),col="white",pch=".",cex=dsize)
+			points((length(res)+21):(length(res)+110),rep(i,90),col=colo[i],pch=".",cex=dsize)
+		}
 	  }
-	}
+	})
 	bps=c(0)
 	for (i in 1:21){
-	  bp1=which(gp[rownames(d),"chromosome_name"]==i+1)[1]-40
+	  gp=gp[which(gp[,2] %in% rownames(gexp)),]
+	  bp1=which(gp[,"chromosome_name"]==i+1)[1]-windowsize/2
 	  bps=c(bps,bp1)
 	  abline(v=bp1,lty=16)
 	}
-
-	dim(d)
-	axis(1, at=bps[2:23]-((bps[2:23]-bps[1:22])/2)-40, labels=1:22, las=2,col="grey")
+	axis(1, at=bps[2:23]-((bps[2:23]-bps[1:22])/2), labels=1:22, las=2,col="grey")
 }
-
-
-
