@@ -8,6 +8,24 @@ rowMeans = function (expmat) {
   return(n)
 }
 
+#' Maps stings to colors
+#'
+#' This function transforms a vector of strings, eg. the patient ID for each cell, to colors
+#' @param st A vector of strings.
+#' @keywords Transform
+#' @export
+#' @examples
+#' removeLogScale(suva_exp)
+
+string.to.colors = function(st){
+  st=as.character(st)
+  n=length(unique(st))
+  pt=unique(st)
+  co=rainbow(n, s = 1, v = 1, start = 0, end = max(1, 10 - 1)/10, alpha = 1)
+  for (i in 1:n){st=gsub(pt[i],co[i] , st)}
+  return(st)
+}
+
 #' Transforms data matrix from log2(CPM/10+1) to CPM
 #'
 #' This function transforms counts in a data matrix from log2(CPM/10+1) to CPM
@@ -191,7 +209,9 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 		hc = hclust(dist(t(d[,])))
 		cellOrder = hc$order
 		d=d[,cellOrder]
-		colo=colo[cellOrder]
+		if (!is.null(colo)){
+			colo=colo[cellOrder]
+		}
 	}
 	print("Cells clustered, starting to plot")
 	
