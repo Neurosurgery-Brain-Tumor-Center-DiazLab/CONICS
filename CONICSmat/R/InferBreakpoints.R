@@ -166,9 +166,11 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
 
 plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL,retMat=FALSE){
 	
+	tumor=setdiff(1:ncol(mat),normal)
 	#Create average of reference and matrix of tumor cells
 	ref=rowMeans(mat[,colnames(mat)[normal]])
 	gexp=mat[,plotcells]
+	if (!is.null(colo)){colo=colo[plotcells]}
 	
 	#Filter matrices
 	ref=ref[which(ref>expThresh)]
@@ -206,8 +208,8 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	if (chr){
 		#cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
 		#hc = hclust(dist(t(d[cg,])))
-		hc = hclust(dist(t(d[,])))
-		cellOrder = hc$order
+		hc = hclust(dist(t(d[,tumor])))
+		cellOrder = c(normal,tumor[hc$order])
 		d=d[,cellOrder]
 		if (!is.null(colo)){
 			colo=colo[cellOrder]
