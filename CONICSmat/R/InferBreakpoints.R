@@ -129,12 +129,14 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
 #' @param chr Optional: Boolenan: Hierarchically cluster rows (cells) to identify clones. default: FALSE
 #' @param expThresh Optional: Double threshold for the average expression of a gene across all cells to be considered in the calculation. 
 #' @param thresh Optional: Double visualtization threshold: Rations above/below this threshold (x>t | x<(-t)) will be set to t | -t 
+#' @param colo Optional: Color for each cell, e.g. for each patient. Will be displayed next to the heatmap
+#' @param retMat Optional: return normalized matrix for custom plotting
 #' @export
 #' @examples
 #' plotChromosomeHeatmap (suva_expr,normal,tumor,gene_pos,chr=c(11))
 
 
-plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL){
+plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL,retMat=FALSE){
 	
 	#Create average of reference and matrix of tumor cells
 	ref=rowMeans(mat[,colnames(mat)[normal]])
@@ -212,4 +214,10 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	  abline(v=bp1,lty=16)
 	}
 	axis(1, at=bps[2:23]-((bps[2:23]-bps[1:22])/2), labels=1:22, las=2,col="grey")
+	bps=round(bps,0)
+	if (retMat){
+		chrpos=c()
+		for (i in 2:22){chrpos=c(chrpos,rep(i-1,bps[i]-bps[i-1]))};chrpos=c(chrpos,rep(22,nrow(d)-bps[22]))
+		return(rbind(chrpos,t(d)))
+	}
 }
