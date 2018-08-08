@@ -1,3 +1,13 @@
+colMeans = function (expmat) {
+  n = apply(expmat,2,mean)
+  return(n)
+}
+
+rowMeans = function (expmat) {
+  n = apply(expmat,1,mean)
+  return(n)
+}
+
 #' Transforms data matrix from log2(CPM/10+1) to CPM
 #'
 #' This function transforms counts in a data matrix from log2(CPM/10+1) to CPM
@@ -162,9 +172,8 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	rat=gexp-ref
 	
 	#Smoothed expression
-	print(dim(rat))
+	print("Generating distance Matrix")
 	d=apply (rat,2,function (x) zoo::rollapply(x,mean,width=windowsize,align="center"))
-	print(dim(d))
 	
 	#Center in each cell and set to boundaries
 	d=apply(d,2,function(x) x-mean(x))
@@ -174,13 +183,17 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	d[which(d<(-thresh))]=(-thresh)
 	
 	#Order by chromosome
+	print(paste("Distance matrix ready with dimensions",nrow(d),ncol(d)))
+	print("Clustering cells")
 	if (chr){
 		#cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
 		#hc = hclust(dist(t(d[cg,])))
 		hc = hclust(dist(t(d[,])))
 		cellOrder = hc$order
 		d=d[,cellOrder]
+		colo=colo[cellOrder]
 	}
+	print("Cells clustered, starting to plot")
 	
 	dsize=500/length(plotcells)
 	i=0
@@ -220,4 +233,5 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 		for (i in 2:22){chrpos=c(chrpos,rep(i-1,bps[i]-bps[i-1]))};chrpos=c(chrpos,rep(22,nrow(d)-bps[22]))
 		return(rbind(chrpos,t(d)))
 	}
+	print("Done")
 }
