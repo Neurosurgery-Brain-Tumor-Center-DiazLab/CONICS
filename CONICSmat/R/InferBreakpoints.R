@@ -158,19 +158,21 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
 #' @param expThresh Optional: Double threshold for the average expression of a gene across all cells to be considered in the calculation. 
 #' @param thresh Optional: Double visualtization threshold: Rations above/below this threshold (x>t | x<(-t)) will be set to t | -t 
 #' @param colo Optional: Color for each cell, e.g. for each patient. Will be displayed next to the heatmap
+#' @param colo2 Optional: Second color for each cell, e.g. for each region. Will be displayed next to the heatmap
 #' @param retMat Optional: return normalized matrix for custom plotting
 #' @export
 #' @examples
 #' plotChromosomeHeatmap (suva_expr,normal,tumor,gene_pos,chr=c(11))
 
 
-plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL,retMat=FALSE){
+plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL, colo2=NULL, retMat=FALSE,plotdendrogram=FALSE){
 	
 	tumor=setdiff(1:ncol(mat),normal)
 	#Create average of reference and matrix of tumor cells
 	ref=rowMeans(mat[,colnames(mat)[normal]])
 	gexp=mat[,plotcells]
 	if (!is.null(colo)){colo=colo[plotcells]}
+	if (!is.null(colo2)){colo2=colo2[plotcells]}
 	
 	#Filter matrices
 	ref=ref[which(ref>expThresh)]
@@ -214,10 +216,18 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 		if (!is.null(colo)){
 			colo=colo[cellOrder]
 		}
+		if (!is.null(colo2)){
+			colo2=colo2[cellOrder]
+		}
 	}
 	print("Cells clustered, starting to plot")
 	
-	dsize=500/length(plotcells)
+	if (plotdendrogram){
+		layout(matrix(c(1,1,2,2,2,2,2,2,2,2,2,2,2,2), nrow = 1))
+		plot(as.dendrogram(hc),ann = F,axes = T,horiz=T,leaflab = "none",main=1)
+	}
+	
+	dsize=800/length(plotcells)
 	i=0
 	apply(d,2,function(x){
 	  res=x
@@ -226,10 +236,14 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	  map = squash::makecmap(c(-thresh,thresh), colFn = squash::darkbluered,n=256)
 	  #map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
 	  if (i==1){
-		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),cex=dsize,pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
+		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),cex=dsize,pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)),main=2)
 		if (!is.null(colo)){
 			points((length(res)+1):(length(res)+20),rep(1,20),col="white",pch=".",cex=dsize)
 			points((length(res)+21):(length(res)+110),rep(1,90),col=colo[i],pch=".",cex=dsize)
+		}
+		if (!is.null(colo2)){
+			points((length(res)+111):(length(res)+160),rep(1,50),col="white",pch=".",cex=dsize)
+			points((length(res)+161):(length(res)+250),rep(1,90),col=colo2[i],pch=".",cex=dsize)
 		}
 		squash::hkey(map, title="",stretch = 0.1)
 	  }
@@ -238,6 +252,10 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 		if (!is.null(colo)){
 			points((length(res)+1):(length(res)+20),rep(i,20),col="white",pch=".",cex=dsize)
 			points((length(res)+21):(length(res)+110),rep(i,90),col=colo[i],pch=".",cex=dsize)
+		}
+		if (!is.null(colo2)){
+			points((length(res)+111):(length(res)+160),rep(i,50),col="white",pch=".",cex=dsize)
+			points((length(res)+161):(length(res)+250),rep(i,90),col=colo2[i],pch=".",cex=dsize)
 		}
 	  }
 	})
