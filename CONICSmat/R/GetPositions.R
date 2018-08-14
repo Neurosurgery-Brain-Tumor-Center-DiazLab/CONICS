@@ -10,11 +10,11 @@
 
 getGenePositions= function(gene_names,ensembl_version="dec2016.archive.ensembl.org",species="human"){
   if (species=="human"){
-	ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "hsapiens_gene_ensembl", host=paste("http://",ensembl_version,sep=""))
+	ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "hsapiens_gene_ensembl", host=ensembl_version)
 	gene_positions <- biomaRt::getBM(attributes=c('ensembl_gene_id','hgnc_symbol','chromosome_name','start_position','end_position'), filters ='hgnc_symbol', values =gene_names, mart = ensembl)
   }
   else {
-	ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "mmusculus_gene_ensembl", host=paste("http://",ensembl_version,sep=""))
+	ensembl = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL", dataset = "mmusculus_gene_ensembl", host=ensembl_version)
 	gene_positions <- biomaRt::getBM(attributes=c('ensembl_gene_id','mgi_symbol','chromosome_name','start_position','end_position'), filters ='mgi_symbol', values =gene_names, mart = ensembl)
   }
   gene_positions=gene_positions[!duplicated(gene_positions[,2]),]
