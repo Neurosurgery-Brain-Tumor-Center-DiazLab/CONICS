@@ -167,10 +167,14 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
 
 plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,chr=FALSE,expThresh=0.4,thresh=1,colo=NULL, colo2=NULL, retMat=FALSE,plotdendrogram=FALSE){
 	
-	tumor=setdiff(1:ncol(mat),normal)
-	#Create average of reference and matrix of tumor cells
+	#Create average of reference (for all non-tumor cells, even if not plotted)
 	ref=rowMeans(mat[,colnames(mat)[normal]])
-	gexp=mat[,plotcells]
+	#Define matrix to be plotted (remove not plotted normal and tumor cells)
+	normal=intersect(normal,plotcells)
+	tumor=setdiff(plotcells,normal)
+	gexp=mat[,c(normal,tumor)]
+	
+	#Set color vectors
 	if (!is.null(colo)){colo=colo[plotcells]}
 	if (!is.null(colo2)){colo2=colo2[plotcells]}
 	
@@ -210,6 +214,8 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	if (chr){
 		#cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
 		#hc = hclust(dist(t(d[cg,])))
+		normal=1:length(normal)
+		tumor=(length(normal)+1):ncol(d)
 		hc = hclust(dist(t(d[,tumor])))
 		cellOrder = c(normal,tumor[hc$order])
 		d=d[,cellOrder]
@@ -223,8 +229,15 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	print("Cells clustered, starting to plot")
 	
 	if (plotdendrogram){
-		layout(matrix(c(1,1,2,2,2,2,2,2,2,2,2,2,2,2), nrow = 1))
-		plot(as.dendrogram(hc),ann = F,axes = T,horiz=T,leaflab = "none",main=1)
+		fr=length(tumor)/(length(normal)+length(tumor))
+		mat = t(matrix(c(1,2,3,3), nrow=2, byrow=TRUE))
+		layout(mat, widths = c(0.1,0.9), heights = c(fr, (1-fr), 1), FALSE)
+		#layout(mat, widths = c(0.1,0.9), heights = c(0.8,0.2, 1), TRUE)
+		#layout(matrix(c(1,1,2,2,2,2,2,2,2,2,2,2,2,2), nrow = 1))
+		par(mar=c(0,0,4,0))
+		plot(as.dendrogram(hc),ann = F,axes = F,horiz=T,leaflab = "none")
+		plot(1,1,col="white",axes=FALSE,xlab = "",ylab="")
+		par(mar=c(5,0,4,0))
 	}
 	
 	dsize=800/length(plotcells)
@@ -236,7 +249,7 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	  map = squash::makecmap(c(-thresh,thresh), colFn = squash::darkbluered,n=256)
 	  #map = squash::makecmap(c(max(-thresh,mind),min(thresh,maxd)), colFn = squash::darkbluered,n=256)
 	  if (i==1){
-		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),cex=dsize,pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)),main=2)
+		plot(c(1:length(res)),rep(1,length(res)),col=squash::cmap(res, map = map),cex=dsize,pch=".",xaxt='n',yaxt='n',ann=FALSE,ylim=c(0,ncol(d)))
 		if (!is.null(colo)){
 			points((length(res)+1):(length(res)+20),rep(1,20),col="white",pch=".",cex=dsize)
 			points((length(res)+21):(length(res)+110),rep(1,90),col=colo[i],pch=".",cex=dsize)
