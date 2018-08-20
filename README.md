@@ -1,6 +1,8 @@
 # __CONICS__
 *CONICS*: *CO*py-*N*umber analysis *I*n single-*C*ell RNA-*S*equencing
 
+CONICS works with either full transcript (e.g. Fluidigm C1) or 5'/3' tagged (e.g. 10X Genomics) data!
+
 The CONICS paper has been accepted for publication in Bioinformatics. Check it out [here](https://doi.org/10.1093/bioinformatics/bty316) !
 
 ## Table of contents
@@ -16,7 +18,7 @@ The CONICS paper has been accepted for publication in Bioinformatics. Check it o
 
 ## <a id="Calling_CNV_R"></a> CONICSmat - Identifying CNVs from scRNA-seq using a count table 
 
-CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data from a gene expression table, without the need of an explicit normal control dataset. A tutorial on how to use CONICSmat, and a Smart-Seq2 dataset, can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
+CONICSmat is an R package that can be used to identify CNVs in single cell RNA-seq data from a gene expression table, without the need of an explicit normal control dataset. CONICSmat works with either full transcript (e.g. Fluidigm C1) or 5'/3' tagged (e.g. 10X Genomics) data. A tutorial on how to use CONICSmat, and a Smart-Seq2 dataset, can be found [on the CONICSmat Wiki page [CLICK here]](https://github.com/diazlab/CONICS/wiki/Tutorial---CONICSmat;---Dataset:-SmartSeq2-scRNA-seq-of-Oligodendroglioma).
 
 ![overview](images/conics_overview.jpg "overview" )
 <i> Visualizations of scRNA-seq data from [Oligodendroglioma](https://www.nature.com/articles/nature20123/) (Tirosh et al., 2016) generated with CONICSmat. </i>
