@@ -146,6 +146,22 @@ plotAllChromosomes= function (mat,normal,tumor,windowsize,gene_pos,fname,patient
   dev.off()
 }
 
+#' Fast calculation of a distance matrix from a gene expression matrix (R dist function is slow)
+#'
+#' This function calculates a distance matrix from a gene expression matrix (R dist function is slow)
+#' @param mat A genes X samples expression matrix of log2(CPM/10+1) scaled (single cell) RNA-seq counts.
+#' @export
+#' @examples
+#' pdist (suva_expr)
+
+pdist= function(tmat){
+  mtm=Matrix::tcrossprod(tmat)
+  sq=rowSums(tmat^2)
+  out0=outer(sq, sq, "+") - 2 * mtm
+  out0[out0 < 0]=0
+  return(sqrt(out0))
+}
+
 #' Generates a heatmap of gene expression across the genome for each cell 
 #'
 #' This function generates a heatmap of gene expression across the genome for each cell 
@@ -212,11 +228,10 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	print(paste("Distance matrix ready with dimensions",nrow(d),ncol(d)))
 	print("Clustering cells")
 	if (chr){
-		#cg=intersect(rownames(d),gp[which(gp[,3] %in% chr),2])
-		#hc = hclust(dist(t(d[cg,])))
 		normal=1:length(normal)
 		tumor=(length(normal)+1):ncol(d)
-		hc = hclust(dist(t(d[,tumor])))
+		dmat=as.dist(pdist(t(d[,tumor])))
+		hc = hclust(dmat)
 		cellOrder = c(normal,tumor[hc$order])
 		d=d[,cellOrder]
 		if (!is.null(colo)){
@@ -230,11 +245,10 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	
 	if (plotdendrogram){
 		fr=length(tumor)/(length(normal)+length(tumor))
+		print(fr)
 		mat = t(matrix(c(1,2,3,3), nrow=2, byrow=TRUE))
 		layout(mat, widths = c(0.1,0.9), heights = c(fr, (1-fr), 1), FALSE)
-		#layout(mat, widths = c(0.1,0.9), heights = c(0.8,0.2, 1), TRUE)
-		#layout(matrix(c(1,1,2,2,2,2,2,2,2,2,2,2,2,2), nrow = 1))
-		par(mar=c(0,0,4,0))
+		par(mar=c(2*fr,0,4,0))
 		plot(as.dendrogram(hc),ann = F,axes = F,horiz=T,leaflab = "none")
 		plot(1,1,col="white",axes=FALSE,xlab = "",ylab="")
 		par(mar=c(5,0,4,0))
@@ -281,6 +295,7 @@ plotChromosomeHeatmap= function (mat,normal,plotcells,gene_pos,windowsize=121,ch
 	}
 	axis(1, at=bps[2:23]-((bps[2:23]-bps[1:22])/2), labels=1:22, las=2,col="grey")
 	bps=round(bps,0)
+	abline(h=length(normal),lty=16)
 	if (retMat){
 		chrpos=c()
 		for (i in 2:22){chrpos=c(chrpos,rep(i-1,bps[i]-bps[i-1]))};chrpos=c(chrpos,rep(22,nrow(d)-bps[22]))
