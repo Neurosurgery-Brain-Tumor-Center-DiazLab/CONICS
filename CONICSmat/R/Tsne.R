@@ -10,7 +10,7 @@
 #' detectVarGenes(suva_exp,500)
 
 detectVarGenes = function(mat,ngenes=500,FDR=0.00001){
-  var.fit = scran::trendVar(mat, span=0.2)
+  var.fit = scran::trendVar(mat)
   var.out = scran::decomposeVar(mat, var.fit)
   hvg.out = var.out[which(var.out$FDR <= FDR),]
   hvg.out = hvg.out[order(hvg.out$bio, decreasing=TRUE),]
