@@ -8,6 +8,27 @@ rowMeans = function (expmat) {
   return(n)
 }
 
+string.to.colors = function(string, colors=NULL, alpha=1){
+  if (is.factor(string)){
+    string = as.character(string)
+  }
+  if (!is.null(colors)){
+    if (length(colors)!=length(unique(string))){
+      break("The number of colors must be equal to the number of unique elements.")
+    }
+    else {
+      cols = rgb(t(col2rgb(colors)), alpha = rep(alpha*255, times=length(colors)), maxColorValue=255)
+      conv = cbind(unique(string), cols)
+    }
+  } else {
+    colors = rainbow(length(unique(string)))
+    cols = rgb(t(col2rgb(colors)), alpha = rep(alpha*255, times=length(colors)), maxColorValue=255)
+    conv = cbind(unique(string), cols)
+    
+  }
+  unlist(lapply(string, FUN=function(x){conv[which(conv[,1]==x),2]}))
+}
+
 
 #' Calculate the BIC (information-theoretic criteria) for a mixture model. 
 #'
