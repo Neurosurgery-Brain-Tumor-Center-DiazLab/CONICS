@@ -35,7 +35,7 @@ CONICSmat is an R package that can be used to identify CNVs in single cell RNA-s
   * [samtools](http://www.htslib.org)
   * [bedtools](http://bedtools.readthedocs.io/en/latest)  IMPORTANT: Bedtools >2.2.5 is needed in order to correctly calculate the coverage using CONICS.
   * Two directories, the first containing the aligned scRNA-seq data to be classified by CNV status, and a second, containing aligned scRNA-seq data to be used as a control.
-  * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
+  * A file containing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
 
 ### Config file
 Adjust __CONICS.cfg__ to customize the following:
@@ -88,7 +88,7 @@ Regions of copy-number alteration will show a drop in the frequency of reads qua
   * [gplots](https://cran.r-project.org/web/packages/gplots/index.html) and [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)
   * One directory containing the aligned tumor scRNA-seq data to be classified
   * Two variant [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) files from exome-seq of (blood) control and tumor tissue, eg generated with the [GATK](https://software.broadinstitute.org/gatk/) toolkit.
-  * A file contianing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
+  * A file containing the genomic coordinates of the CNVs in [BED](https://genome.ucsc.edu/FAQ/FAQformat#format1) format.
   
 ### Config file
 Adjust __CONICS.cfg__ to customize the following:
