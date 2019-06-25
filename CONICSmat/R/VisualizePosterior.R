@@ -8,6 +8,16 @@ rowMeans = function (expmat) {
   return(n)
 }
 
+
+#' Convert strings to colors
+#'
+#' This function conversts a vector of strings to a vector of colors
+#' @param string vector of strings
+#' @keywords Convert
+#' @export
+#' @examples
+#' string.to.colors(c("a","b"))
+
 string.to.colors = function(string, colors=NULL, alpha=1){
   if (is.factor(string)){
     string = as.character(string)
