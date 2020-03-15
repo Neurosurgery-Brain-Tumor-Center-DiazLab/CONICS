@@ -120,7 +120,7 @@ All output files will be located in the directory __output_[base name]__
   
 ![heatmap](images/heatmap_sf10345.jpg?raw=true "B-allele heatmap" )
 
-## <a id="Constructing_Tree"></a> Phylogenetic tree contruction
+## <a id="Constructing_Tree"></a> Phylogenetic tree construction
 CONICS can generate a phylogenetic tree from the CNV incidence matrix, using the Fitch-Margoliash algorithm. Other phylogenetic reconstruction algorithms can be applied, using the incidence matrix as a starting point.
 
 ### Requirements
